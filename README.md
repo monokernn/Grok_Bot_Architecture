@@ -1,19 +1,20 @@
-# Grok Bot Architecture
+# Grok Bot $Architecture
 
 **Autonomous multi-agent operations interface for research, production, evidence control, review, and human-approved delivery.**
 
-![Grok Bot Company operations floor](preview.png)
+![Grok Bot $Architecture operations floor](preview.png)
 
-Grok Bot Company turns a team of specialist AI agents into a visible operating system. Instead of hiding agent work behind a chat window, it presents the entire workflow as a live operations floor: bots move between workstations, exchange artifacts, report progress, emit telemetry, and stop at an approval boundary before consequential actions.
+Grok Bot $Architecture turns a team of specialist AI agents into a visible operating system. Instead of hiding agent work behind a chat window, it presents the entire workflow as a live operations floor: bots move between workstations, exchange artifacts, report progress, emit telemetry, and stop at an approval boundary before consequential actions.
 
 The included mission, **NS-INT-042**, demonstrates a complete competitor-intelligence workflow. At normal speed it runs for approximately five minutes and processes 24 sources, creates a structured evidence pack, performs an independent audit, and prepares a controlled release.
 
-> Grok Bot Company is an independent interface concept and is not an official xAI product.
+> Grok Bot $Architecture is an independent interface concept and is not an official xAI product.
 
 ## What the interface provides
 
 - A continuous pixel-art operations room with six visible specialist bots.
 - Live agent movement through collision-aware office routes.
+- Live Agent Comms with routed message cards, animated channels, and moving work packets between specialists.
 - Real-time task labels such as `reading pricing pages`, `sourced 6 links`, and `cross-checking 24 citations`.
 - Animated wall telemetry, workstation displays, city lights, and a real-time analog clock.
 - A mission timeline with progress, ETA, cost, artifacts, and operational stages.
@@ -163,6 +164,20 @@ index.html?autoplay=ledger
 
 This preloads a complete artifact lineage, opens the inspector, draws handoff packets across the room, and stops on the visible `APPROVAL REQUIRED` policy state.
 
+### Live Agent Comms
+
+Key mission handoffs now publish a visible inter-agent message:
+
+- Helm routes the research scope to Scout;
+- Scout transfers the verified research pack to Forge;
+- Forge sends the evidence bundle to Archive;
+- Archive opens a lineage channel to Sentinel;
+- Sentinel forwards the signed audit receipt to Relay.
+
+The Operations Floor draws the active channel directly between both bots, moves encrypted packets along the route, and keeps the three latest messages in the `LIVE AGENT COMMS` panel.
+
+Open `index.html?autoplay=comms` for an instant three-channel showcase.
+
 Suggested production event format:
 
 ```json
@@ -188,7 +203,7 @@ Consequential operations should always be represented as approval requests and m
 ├── grokbot-adapter.js  Mock transport, commands, heartbeat, persistence
 ├── mission-ledger.js   Hash chain, artifact versions, lineage, policies
 ├── styles.css          Base layout and component styles
-├── theme-muted.css     Grok Bot Company theme and responsive rules
+├── theme-muted.css     Grok Bot $Architecture theme and responsive rules
 ├── preview.png         Current interface preview
 └── README.md           Product and operating documentation
 ```

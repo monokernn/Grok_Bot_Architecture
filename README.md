@@ -92,7 +92,7 @@ Then visit `http://localhost:8080`.
 | `Start mission` | Starts the mission timeline |
 | Pause button | Pauses or resumes execution |
 | Reset button | Returns agents and mission state to the beginning |
-| `1x–10x` | Changes simulation speed |
+| `1x–10x` | Changes system speed |
 | `Space` | Starts, pauses, or resumes |
 | `R` | Resets the mission |
 | Agent card or bot | Opens the current task and location |
@@ -123,6 +123,19 @@ Live Feed + mission telemetry + approval state
 
 The visual layer is intentionally separated from the mission events. A real agent backend can replace the built-in timeline by sending the same state transitions over WebSocket, Server-Sent Events, or an MCP bridge.
 
+### Mock Grok Bot transport
+
+The browser currently loads `grokbot-adapter.js` before the interface engine. It provides a production-shaped local transport without making external requests:
+
+- persistent session IDs stored in `localStorage`;
+- realistic connection and command acknowledgement latency;
+- heartbeat, uptime, queue-depth, and round-trip telemetry;
+- mission start, pause, resume, and reset commands;
+- approval request and resolution commands;
+- a 40-event local telemetry buffer.
+
+The header deliberately displays `SIM` next to `GROK LINK`. Replace `window.grokBot` with an adapter exposing the same methods to connect a real service without changing the canvas renderer or mission controls.
+
 Suggested production event format:
 
 ```json
@@ -145,6 +158,7 @@ Consequential operations should always be represented as approval requests and m
 .
 ├── index.html          Application shell and control panels
 ├── app.js              Mission engine, routing, agents, canvas renderer
+├── grokbot-adapter.js  Mock transport, commands, heartbeat, persistence
 ├── styles.css          Base layout and component styles
 ├── theme-muted.css     Grok Bot Company theme and responsive rules
 ├── preview.png         Current interface preview
@@ -158,8 +172,8 @@ Consequential operations should always be represented as approval requests and m
 - Adjust the five-minute runtime using `state.duration`.
 - Add room destinations in the `points` object.
 - Change desktop and compact layouts in the `VIEWPORT-LOCKED RESPONSIVE SHELL` section of `theme-muted.css`.
-- Replace simulated events with backend messages while keeping the existing `agent()`, `event()`, and `stage()` update model.
+- Replace events with backend messages while keeping the existing `agent()`, `event()`, and `stage()` update model.
 
 ## Current status
 
-The interface, movement system, mission state machine, telemetry feed, and approval flow run entirely in the browser. External data sources, persistent storage, authentication, and real model execution are integration points for the production backend.
+The interface, movement system, mission state machine, telemetry feed, mock transport, and approval flow run entirely in the browser. External data sources, server-side storage, authentication, and real model execution remain integration points for the production backend.

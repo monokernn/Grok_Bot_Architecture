@@ -56,3 +56,7 @@ dialog{border-color:#333;background:#0a0b0a;box-shadow:none}
  .grid{width:100%;min-height:0}
  #stationCanvas{max-width:100%}
 }
+
+/* GROK BOT TRANSPORT */
+.live{white-space:nowrap}.live[data-mode=mock]:after{content:"SIM";margin-left:6px;padding-left:6px;border-left:1px solid currentColor;font-size:6px;opacity:.55}.live.online i{background:var(--green)}.live.connecting i{background:var(--amber)}.live.offline{color:var(--red)}.live.offline i{background:var(--red)}
+.feed-foot span{min-width:0}.feed-foot span i{flex:0 0 auto}.feed-foot span em{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-style:normal}

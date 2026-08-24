@@ -14,7 +14,7 @@
       <div class=brand>
         <div class=brand-mark><i></i></div>
         <div><span>AUTONOMOUS OPERATIONS</span><h1>GROK BOT COMPANY</h1></div>
-        <b class=live><i></i> LIVE</b>
+        <b id=connectionBadge class="live connecting" data-mode=mock><i></i><span id=connectionText>LINKING</span></b>
       </div>
       <div class=metrics>
         <div><span>CREW</span><b>6 / 6</b></div>
@@ -30,7 +30,7 @@
         <div id="agentRoster" class="agent-list"></div>
         <div class="health">
           <div><span>STATION HEALTH</span><b>98.7%</b></div><i><em></em></i>
-          <p><span><i class="dot cyan"></i>Event bus</span><b>ONLINE</b></p>
+          <p><span><i class="dot cyan"></i>Event bus</span><b id=eventBusStatus>LINKING</b></p>
           <p><span><i class="dot green"></i>Vault</span><b>SYNCED</b></p>
           <p><span><i class="dot amber"></i>Routines</span><b>03</b></p>
         </div>
@@ -53,7 +53,7 @@
       <aside class="panel feed">
         <div class="panel-head"><div><span>EVENT STREAM</span><h2>Live Feed</h2></div><b id="eventCount">03 EVENTS</b></div>
         <div id="eventFeed" class="events"></div>
-        <div class="feed-foot"><span><i></i>Listening for telemetry</span><button id="clearFeed">CLEAR</button></div>
+        <div class="feed-foot"><span><i></i><em id=transportStatus>Opening Grok transport</em></span><button id="clearFeed">CLEAR</button></div>
       </aside>
       <section class="panel mission">
         <div class="mission-id"><span>ACTIVE MISSION</span><b>NS-INT-042</b><em id="riskBadge">LOW RISK</em></div>
@@ -78,6 +78,7 @@
     <section><p><b>Target:</b> Executive intelligence workspace</p><p><b>Payload:</b> 12-page brief, claim map, citations, and source ledger.</p><p><b>Rollback:</b> Draft publication can be removed.</p><p><b>Evidence:</b> 24 sources, 18 indexed artifacts, and 12 passed checks.</p></section>
     <footer><button value="close" class="primary">Return to airlock</button></footer>
   </form></dialog>
+  <script src="grokbot-adapter.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

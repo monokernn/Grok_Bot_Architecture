@@ -2,6 +2,7 @@
 "use strict";
 const $=s=>document.querySelector(s), canvas=$("#stationCanvas"), ctx=canvas.getContext("2d");
 const C={helm:"#ef5a52",forge:"#eda63a",sentinel:"#8d74d6",scout:"#a6cf58",archive:"#50bcb5",relay:"#4e91cf",green:"#a6cf58",amber:"#c99b3b",red:"#ef5a52",cyan:"#50bcb5",muted:"#747474"};
+const bridge=window.grokBot||null;
 const zones=[
  {id:"bridge",name:"COMMAND DESK",x:65,y:115,w:200,h:125,color:C.helm,type:"bridge"},
  {id:"build",name:"BUILD DESK",x:350,y:115,w:210,h:125,color:C.forge,type:"build"},
@@ -76,6 +77,7 @@ function event(actor,title,message,tone){
  el.className="event";el.style.setProperty("--tone",colors[tone]||C.cyan);
  el.innerHTML='<i></i><div><b>'+actor+'</b><time>'+time+'</time></div><p><strong>'+title+'.</strong> '+message+'</p>';
  $("#eventFeed").prepend(el);state.count++;$("#eventCount").textContent=String(state.count).padStart(2,"0")+" EVENTS";
+ if(bridge)bridge.recordEvent({missionId:"NS-INT-042",actor,title,message,tone});
 }
 function formatDuration(ms){const total=Math.max(0,Math.ceil(ms/1000)),m=Math.floor(total/60),s=total%60;return String(m).padStart(2,"0")+":"+String(s).padStart(2,"0")}
 function stage(name,progress,title,sub){
@@ -85,23 +87,28 @@ function stage(name,progress,title,sub){
 function requestApproval(){
  state.approval=true;state.running=false;$("#approvalIdle").hidden=true;$("#approvalRequest").hidden=false;
  $("#airlockMetric").textContent="01 WAITING";$("#airlockMetric").style.color=C.red;$("#riskBadge").textContent="APPROVAL HOLD";$("#riskBadge").style.color=C.red;burst(points.airlock.x,points.airlock.y,C.red,28);
+ if(bridge)bridge.requestApproval({missionId:"NS-INT-042",agent:"relay",action:"publish intelligence brief",reversible:true});
 }
 function resolve(ok){
  if(!state.approval)return;state.approval=false;$("#approvalIdle").hidden=false;$("#approvalRequest").hidden=true;$("#airlockMetric").textContent="CLEAR";$("#airlockMetric").style.color="";
+ if(bridge)bridge.resolveApproval(ok?"approved":"rejected");
  if(ok){event("operator","Action approved","The intelligence brief passed through the Approval Airlock.","green");agent("relay","complete","release approved","airlock");agent("helm","complete","mission completed","bridge");stage("release",100,"Mission complete","Six agents produced an audited brief with a traceable evidence record.");$("#riskBadge").textContent="COMPLETED";$("#riskBadge").style.color=C.green;state.complete=true;state.spend=4.07;$("#spendMetric").textContent="$4.07";setTimeout(()=>event("helm","Mission completed","NS-INT-042 closed with a clean evidence record.","green"),500);burst(points.bridge.x,points.bridge.y,C.green,24)}
  else{state.rejected=true;event("operator","Action rejected","Publication blocked; all artifacts remain reversible in the Vault.","red");agent("relay","idle","release cancelled","airlock");agent("helm","working","revising release plan","bridge");agent("forge","working","preparing private revision","build");stage("synthesis",48,"Returned for revision","The external action was rejected; the evidence pack remains intact.");$("#riskBadge").textContent="REVISION";$("#riskBadge").style.color=C.amber}
 }
 function start(){
  if(state.complete||state.rejected||state.cursor>=timeline.length)reset(false);if(state.approval)return;
- state.running=true;state.paused=false;$("#startBtn").textContent="● Mission running";event("system","Simulation started","Grok Bot Company event loop is active.","cyan");
+ state.running=true;state.paused=false;$("#startBtn").textContent="● Mission running";event("system","System started","Grok Bot Company event loop is active.","cyan");
+ if(bridge)bridge.startMission({id:"NS-INT-042",objective:"Build the 2026 competitor intelligence brief",agents:agents.map(a=>a.id)}).then(ack=>event("grok","Command acknowledged","mission.start accepted as #"+ack.sequence+" in "+ack.latency+"ms.","green")).catch(()=>event("grok","Transport warning","Mission continues locally; command acknowledgement was not received.","amber"));
 }
 function pause(){
- if(state.approval||state.complete)return;state.paused=!state.paused;state.running=!state.paused;$("#pauseBtn").textContent=state.paused?"▶":"Ⅱ";event("system",state.paused?"Simulation paused":"Simulation resumed",state.paused?"Timeline execution is holding.":"Timeline execution continues.","amber");
+ if(state.approval||state.complete)return;state.paused=!state.paused;state.running=!state.paused;$("#pauseBtn").textContent=state.paused?"▶":"Ⅱ";event("system",state.paused?"System paused":"System resumed",state.paused?"Timeline execution is holding.":"Timeline execution continues.","amber");
+ if(bridge)bridge.setMissionState(state.paused?"paused":"running");
 }
 function reset(announce=true){
  state.running=false;state.paused=false;state.approval=false;state.complete=false;state.rejected=false;state.elapsed=0;state.cursor=0;state.artifacts=0;state.spend=.42;agents=initial.map(a=>({...a}));
  $("#approvalIdle").hidden=false;$("#approvalRequest").hidden=true;$("#airlockMetric").textContent="CLEAR";$("#airlockMetric").style.color="";$("#spendMetric").textContent="$0.42";$("#riskBadge").textContent="LOW RISK";$("#riskBadge").style.color="";$("#startBtn").textContent="▶ Start mission";$("#pauseBtn").textContent="Ⅱ";
  stage(null,0,"Build the 2026 competitor intelligence brief","Research 24 sources, map claims, build an evidence pack, audit, and prepare release.");document.querySelectorAll("#stages span").forEach(n=>n.classList.remove("active","done"));renderRoster();select("helm");if(announce)event("system","Mission reset","All agents returned to their stations; the five-minute clock is ready.","amber");
+ if(bridge&&announce)bridge.resetMission();
 }
 function burst(x,y,color,count){for(let i=0;i<count;i++)state.particles.push({x,y,color,life:1,dx:(Math.random()-.5)*2.8,dy:(Math.random()-.5)*2.8})}
 function resize(){const r=canvas.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);canvas.width=Math.max(1,r.width*d);canvas.height=Math.max(1,r.height*d);ctx.setTransform(d,0,0,d,0,0);ctx.imageSmoothingEnabled=false}
@@ -194,8 +201,25 @@ function draw(){const w=canvas.clientWidth,h=canvas.clientHeight;ctx.clearRect(0
 function tick(now){const dt=Math.min(40,now-state.last);state.last=now;if(state.running&&!state.approval){state.elapsed=Math.min(state.duration,state.elapsed+dt*state.speed);while(state.cursor<timeline.length&&state.elapsed>=timeline[state.cursor].at)timeline[state.cursor++].run();if(!state.approval){const progress=Math.min(96,Math.floor(state.elapsed/state.duration*100));$("#progressBar").style.width=progress+"%";$("#progressLabel").textContent=progress+"% · "+formatDuration(state.duration-state.elapsed)+" left"}state.spend=Math.min(4.07,.42+state.elapsed/1000*.0122);$("#spendMetric").textContent="$"+state.spend.toFixed(2)}ambient(now);move(dt);draw();requestAnimationFrame(tick)}
 function canvasClick(e){const r=canvas.getBoundingClientRect(),t=transform(),x=(e.clientX-r.left-t.ox)/t.s,y=(e.clientY-r.top-t.oy)/t.s,a=agents.find(q=>Math.hypot(q.x-x,q.y-y)<30);if(a)return select(a.id);const z=zones.find(q=>x>=q.x&&x<=q.x+q.w&&y>=q.y&&y<=q.y+q.h);if(z){const box=$("#selection"),crew=agents.filter(a=>a.zone===z.id).length;box.querySelector("span").textContent="STATION ZONE";box.querySelector("b").textContent=z.name;box.querySelector("p").textContent=crew+" crew assigned · "+z.type.toUpperCase()+" subsystem online.";box.style.borderColor=z.color;box.querySelector("span").style.color=z.color}}
 function clock(){$("#clock").textContent=new Intl.DateTimeFormat("en-GB",{timeZone:"Europe/Moscow",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false}).format(new Date())}
-$("#startBtn").onclick=start;$("#pauseBtn").onclick=pause;$("#resetBtn").onclick=()=>reset();$("#speed").onchange=e=>{state.speed=Number(e.target.value);event("system","Timeline speed changed","Simulation is running at "+state.speed+"×.","amber")};$("#approveBtn").onclick=()=>resolve(true);$("#rejectBtn").onclick=()=>resolve(false);$("#inspectBtn").onclick=()=>$("#inspectDialog").showModal();$("#clearFeed").onclick=()=>{$("#eventFeed").innerHTML="";state.count=0;$("#eventCount").textContent="00 EVENTS"};canvas.onclick=canvasClick;window.onresize=resize;if("ResizeObserver"in window)new ResizeObserver(resize).observe(canvas);
+function transportState(status,detail={}){
+ const badge=$("#connectionBadge"),label=$("#connectionText"),bus=$("#eventBusStatus"),footer=$("#transportStatus"),session=(detail.sessionId||bridge&&bridge.sessionId||"session_pending").split("_").pop().slice(-6).toUpperCase();
+ badge.classList.remove("connecting","online","offline");badge.classList.add(status);badge.dataset.mode=detail.mode||"mock";
+ if(status==="online"){label.textContent="GROK LINK";bus.textContent="ONLINE";footer.textContent="SIM "+session+" · "+(detail.rtt||"--")+"ms · queue "+(detail.queueDepth||0)}
+ else if(status==="connecting"){label.textContent="LINKING";bus.textContent="LINKING";footer.textContent="Negotiating Grok session "+session}
+ else{label.textContent="OFFLINE";bus.textContent="OFFLINE";footer.textContent="Local mission engine only"}
+ badge.title="Grok Bot transport · session "+session;
+}
+function bindTransport(){
+ if(!bridge){transportState("offline");return}
+ bridge.addEventListener("connection",e=>transportState(e.detail.status,e.detail));
+ bridge.addEventListener("heartbeat",e=>transportState("online",e.detail));
+ bridge.addEventListener("queue",e=>{const status=bridge.snapshot();transportState(status.status,{sessionId:status.sessionId,mode:status.mode,rtt:status.lastAck&&status.lastAck.latency,queueDepth:e.detail.depth})});
+ bridge.addEventListener("ack",e=>transportState("online",{sessionId:e.detail.sessionId,mode:e.detail.mode,rtt:e.detail.latency,queueDepth:bridge.snapshot().queueDepth}));
+ bridge.connect().then(info=>event("grok","Mock transport connected","Persistent local session "+info.sessionId.split("_").pop().toUpperCase()+" is receiving commands and telemetry.","green")).catch(()=>transportState("offline"));
+}
+$("#startBtn").onclick=start;$("#pauseBtn").onclick=pause;$("#resetBtn").onclick=()=>reset();$("#speed").onchange=e=>{state.speed=Number(e.target.value);event("system","Timeline speed changed","System is running at "+state.speed+"×.","amber")};$("#approveBtn").onclick=()=>resolve(true);$("#rejectBtn").onclick=()=>resolve(false);$("#inspectBtn").onclick=()=>$("#inspectDialog").showModal();$("#clearFeed").onclick=()=>{$("#eventFeed").innerHTML="";state.count=0;$("#eventCount").textContent="00 EVENTS"};canvas.onclick=canvasClick;window.onresize=resize;if("ResizeObserver"in window)new ResizeObserver(resize).observe(canvas);
 window.onkeydown=e=>{if(e.code==="Space"&&e.target.tagName!=="BUTTON"){e.preventDefault();state.running?pause():start()}if(e.key.toLowerCase()==="r")reset()};
+bindTransport();
 renderRoster();resize();select("helm");stage(null,0,"Build the 2026 competitor intelligence brief","Research 24 sources, map claims, build an evidence pack, audit, and prepare release.");document.querySelectorAll("#stages span").forEach(n=>n.classList.remove("active","done"));
 event("system","Station online","Room telemetry, pathing, and the five-minute mission clock are live.","green");event("vault","Evidence store mounted","Workspace is ready for source-linked artifacts.","cyan");event("airlock","Safety boundary armed","Publication requires one operator decision.","amber");
 clock();setInterval(clock,1000);requestAnimationFrame(tick);

@@ -1,0 +1,58 @@
+:root{--bg:#070807;--panel:#0a0b0a;--line:#282a28;--text:#e3e3dc;--muted:#71736f;--cyan:#50bcb5;--green:#a6cf58;--amber:#c99b3b;--orange:#eda63a;--red:#ef5a52;--violet:#8d74d6}
+body{background-color:#070807;background-image:linear-gradient(#15171588 1px,transparent 1px),linear-gradient(90deg,#15171588 1px,transparent 1px);background-size:40px 40px}
+.scanlines{opacity:.055;mix-blend-mode:normal}.app{padding:8px}
+.topbar{min-height:60px;border-color:#2b2d2b;background:#090a09;box-shadow:none;clip-path:none}
+.brand{gap:12px;padding:7px 16px}.brand h1{font-family:Impact,"Arial Black",sans-serif;font-size:22px;letter-spacing:.055em;color:#f1f1eb;line-height:.9}.brand span{color:#60635f;font-size:7px}
+.brand-mark{width:42px;height:42px;border:0;border-radius:50%;transform:none;background:#eeeeea;box-shadow:none}.brand-mark i{position:relative;width:6px;height:18px;border-radius:4px;background:#080908;box-shadow:none;transform:rotate(-28deg)}.brand-mark i:after{content:"";position:absolute;left:13px;top:8px;width:5px;height:12px;border-radius:4px;background:#080908;transform:rotate(8deg)}
+.live{border-color:#333;color:#b9bbb6;background:#0d0e0d}.live i{background:#ef5a52;box-shadow:none}.metrics{border-color:#292b29}.metrics>div{border-color:#292b29}.metrics b{color:#d9dad5}.metrics>div:nth-child(3) b{color:#c9b76c}.clock b{color:#e2d467}
+.grid{margin-top:6px;gap:6px;grid-template-columns:246px minmax(550px,1fr) 304px}.panel{border-color:#292b29;background:#090a09f7;box-shadow:none}.panel:after{display:none}.panel-head,.station-head{border-color:#292b29}.panel-head>b{border-color:#303230;color:#82847f;background:#0c0d0c}
+.agent-list{padding:7px;gap:4px}.agent-card{min-height:70px;padding:9px 8px 8px 57px;border-color:#272927;background:#090a09}.agent-card:hover,.agent-card.selected{transform:none;border-color:#555;background:#0d0e0d}.agent-card:before{width:2px;box-shadow:none}
+.avatar{left:13px;top:11px;width:32px;height:31px;font-size:0;clip-path:polygon(25% 0,75% 0,91% 10%,100% 28%,100% 78%,84% 78%,84% 100%,65% 100%,65% 82%,36% 82%,36% 100%,16% 100%,16% 78%,0 78%,0 28%,9% 10%);box-shadow:none}.avatar:after{content:"";position:absolute;top:11px;left:8px;width:4px;height:6px;border:0;background:#101110;box-shadow:11px 0 #101110}
+.agent-head b{font-size:10px;color:#dedfd9}.agent-head span{font-size:6px}.agent-role{font-size:7px;color:#686a67}.agent-task{margin-top:7px;font-size:7px;color:#a4a6a1}.agent-task i{width:4px;height:4px;box-shadow:none}
+.health{padding:10px;border-color:#292b29;background:#090a09}.health>i em{box-shadow:none}.dot{box-shadow:none!important}
+.controls button,.controls select,.actions button,.primary{border-color:#303230;background:#0c0d0c;color:#9b9d98}.controls button:hover,.controls select:hover{border-color:#656762;color:#eee}.primary{border-color:#636661!important;color:#dedfd9!important;background:#101110!important}.primary:hover{background:#171817!important}
+.canvas-wrap{background:#080908}.selection{border-color:#777;background:#070807ef;backdrop-filter:none}.selection span{color:#9a9c97}.legend{background:#070807e8}
+.event{border-color:#1f211f}.event>i{border-color:#090a09;box-shadow:none}.event p{color:#858782}.event div b{filter:saturate(.75)}.feed-foot{border-color:#292b29}.feed-foot span i{box-shadow:none}
+.mission-id>b,.mission-copy>b{color:#dfe0da}.mission-id em{border-color:#454745;color:#a8aaa5}.progress{height:3px;background:#282a28}.progress i{background:#aeb1aa;box-shadow:none}.stages span.active{color:#d8d9d3}.stages span.active:before{background:#d8d9d3;box-shadow:none}.stages span.done{color:#9dbb61}.mission-copy h2{font-family:"Arial Black","Cascadia Mono",monospace;font-size:13px}.mission-copy p{color:#6f716d}
+.airlock-icon{border-color:#303230;box-shadow:inset 0 0 0 8px #090a09}.airlock-icon:before,.airlock-icon:after{background:#303230}.airlock-icon i{border-color:#747672}.approval-request{background:#0a0b0a}.alert>i{filter:saturate(.8)}.facts span,.actions button{border-color:#303230;background:#0b0c0b}.actions button:nth-child(2){border-color:#6f3838;color:#d47772}.actions button:nth-child(3){border-color:#53663b;color:#abc978;background:#0d100b}
+dialog{border-color:#333;background:#0a0b0a;box-shadow:none}
+@media(min-width:781px){.agent-list{grid-template-columns:1fr}.health{margin-top:auto}}
+
+/* ROOM-FIRST LAYOUT */
+@media(min-width:901px){
+ .grid{grid-template-columns:minmax(720px,1fr) 310px;grid-template-rows:230px minmax(410px,1fr) 150px;gap:6px}
+ .station{grid-column:1;grid-row:1/3}.roster{grid-column:2;grid-row:1}.feed{grid-column:2;grid-row:2}.mission{grid-column:1;grid-row:3}.approval{grid-column:2;grid-row:3}
+ .roster .panel-head{height:48px;padding:8px 12px}.roster .panel-head h2{font-size:12px}.roster .health{display:none}
+ .roster .agent-list{grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(3,54px);gap:4px;padding:7px}
+ .roster .agent-card{min-height:54px;padding:7px 5px 5px 42px}.roster .avatar{left:9px;top:10px;width:25px;height:25px}.roster .avatar:after{left:6px;top:8px;width:3px;height:5px;box-shadow:8px 0 #101110}
+ .roster .agent-head b{font-size:8px}.roster .agent-head span{font-size:5px}.roster .agent-role{display:none}.roster .agent-task{margin-top:6px;font-size:5.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .station-head{min-height:58px}.panel-head{height:58px}.canvas-wrap{min-height:560px}
+}
+@media(min-width:901px) and (max-width:1180px){.grid{grid-template-columns:minmax(650px,1fr) 275px}.metrics{display:none}}
+
+/* VIEWPORT-LOCKED RESPONSIVE SHELL */
+@media(min-width:901px){
+ html,body{width:100%;height:100%;overflow:hidden;scrollbar-gutter:stable}
+ .app{width:100vw;height:100dvh;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+ .topbar{flex:0 0 60px;height:60px;min-height:60px}
+ .grid{flex:1;height:auto;min-height:0;grid-template-rows:242px minmax(0,1fr) clamp(118px,16vh,150px)}
+ .panel,.station,.roster,.feed,.mission,.approval{min-height:0}
+ .canvas-wrap{min-height:0}
+ .events{overflow-y:scroll}
+ .controls .primary{width:108px;padding-inline:7px;white-space:nowrap}
+}
+@media(min-width:901px) and (max-height:820px){
+ .topbar{flex-basis:52px;height:52px;min-height:52px}.brand-mark{width:36px;height:36px}.brand h1{font-size:18px}.clock b{font-size:15px}
+ .grid{grid-template-rows:158px minmax(0,1fr) 112px}
+ .roster .agent-list{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,44px);gap:3px;padding:5px}
+ .roster .agent-card{min-height:44px;padding:6px 4px 4px 33px}.roster .avatar{left:6px;top:10px;width:20px;height:22px}.roster .avatar:after{left:5px;top:7px;width:3px;height:5px;box-shadow:7px 0 #101110}
+ .roster .agent-head b{font-size:6.5px}.roster .agent-head span{font-size:4.5px}.roster .agent-task{display:none}
+ .station-head,.panel-head{min-height:50px;height:50px}.mission-main{padding:12px 16px}.mission-id{padding:12px}.mission-id>b{font-size:15px;margin:5px 0 8px}.stages{margin-top:10px}.progress{margin-top:11px}
+ .airlock-idle{padding:12px}.airlock-icon{transform:scale(.8)}.approval-request{padding:9px}.facts{margin:7px 0}.actions button{height:25px}
+}
+@media(max-width:900px){
+ html,body{width:100%;min-height:100%;overflow-x:hidden}
+ .app{width:100%;min-height:100dvh}
+ .grid{width:100%;min-height:0}
+ #stationCanvas{max-width:100%}
+}

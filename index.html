@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang=en>
+<head>
+  <meta charset=UTF-8>
+  <meta name=viewport content=width=device-width,initial-scale=1>
+  <title>Night Shift</title>
+  <link rel=stylesheet href=styles.css>
+  <link rel=stylesheet href=theme-muted.css>
+</head>
+<body>
+  <div class=scanlines></div>
+  <div class=app>
+    <header class=topbar>
+      <div class=brand>
+        <div class=brand-mark><i></i></div>
+        <div><span>AUTONOMOUS OPERATIONS</span><h1>NIGHT SHIFT</h1></div>
+        <b class=live><i></i> LIVE</b>
+      </div>
+      <div class=metrics>
+        <div><span>CREW</span><b>6 / 6</b></div>
+        <div><span>MISSIONS</span><b>01</b></div>
+        <div><span>AIRLOCK</span><b id=airlockMetric>CLEAR</b></div>
+        <div><span>SPEND</span><b id=spendMetric>$0.42</b></div>
+      </div>
+      <div class=clock><span>NIGHT WATCH</span><b id=clock>00:00:00</b><small>EUROPE / MOSCOW</small></div>
+    </header>
+    <main class="grid">
+      <aside class="panel roster">
+        <div class="panel-head"><div><span>CREW MANIFEST</span><h2>Agents</h2></div><b>6 ONLINE</b></div>
+        <div id="agentRoster" class="agent-list"></div>
+        <div class="health">
+          <div><span>STATION HEALTH</span><b>98.7%</b></div><i><em></em></i>
+          <p><span><i class="dot cyan"></i>Event bus</span><b>ONLINE</b></p>
+          <p><span><i class="dot green"></i>Vault</span><b>SYNCED</b></p>
+          <p><span><i class="dot amber"></i>Routines</span><b>03</b></p>
+        </div>
+      </aside>
+      <section class="panel station">
+        <div class="station-head">
+          <div><span>DECK 07 · AUTONOMY STATION</span><h2>Operations Floor</h2></div>
+          <div class="controls">
+            <button id="startBtn" class="primary">▶ Start mission</button>
+            <button id="pauseBtn">Ⅱ</button><button id="resetBtn">↺</button>
+            <select id="speed" aria-label="Mission speed"><option value="1">1x</option><option value="2">2x</option><option value="4">4x</option><option value="10">10x</option></select>
+          </div>
+        </div>
+        <div class="canvas-wrap">
+          <canvas id="stationCanvas"></canvas>
+          <div id="selection" class="selection"><span>SELECTED AGENT</span><b>HELM</b><p>Coordinating from the Command Bridge.</p></div>
+          <div class="legend"><span><i class="dot green"></i>working</span><span><i class="dot amber"></i>handoff</span><span><i class="dot red"></i>approval</span></div>
+        </div>
+      </section>
+      <aside class="panel feed">
+        <div class="panel-head"><div><span>EVENT STREAM</span><h2>Live Feed</h2></div><b id="eventCount">03 EVENTS</b></div>
+        <div id="eventFeed" class="events"></div>
+        <div class="feed-foot"><span><i></i>Listening for telemetry</span><button id="clearFeed">CLEAR</button></div>
+      </aside>
+      <section class="panel mission">
+        <div class="mission-id"><span>ACTIVE MISSION</span><b>NS-INT-042</b><em id="riskBadge">LOW RISK</em></div>
+        <div class="mission-main">
+          <div class="mission-copy"><div><h2 id="missionTitle">Build the 2026 competitor intelligence brief</h2><p id="missionSub">Research 24 sources, map claims, build an evidence pack, audit, and prepare release.</p></div><b id="progressLabel">0% · 05:00 left</b></div>
+          <div class="progress"><i id="progressBar"></i></div>
+          <div id="stages" class="stages"><span>SCOPE</span><span>RESEARCH</span><span>SYNTHESIS</span><span>EVIDENCE</span><span>REVIEW</span><span>RELEASE</span></div>
+        </div>
+      </section>
+      <section class="panel approval">
+        <div class="airlock-idle" id="approvalIdle"><div class="airlock-icon"><i></i></div><div><span>APPROVAL AIRLOCK</span><h2>Standing by</h2><p>Consequential actions will stop here.</p></div></div>
+        <div class="approval-request" id="approvalRequest" hidden>
+          <div class="alert"><i>!</i><div><span>DECISION REQUIRED</span><b>Publish intelligence brief</b></div><em>HIGH IMPACT</em></div>
+          <div class="facts"><span>AGENT<b>RELAY</b></span><span>REVERSIBLE<b>YES</b></span><span>TARGET<b>PUBLIC FEED</b></span></div>
+          <div class="actions"><button id="inspectBtn">Inspect</button><button id="rejectBtn">Reject</button><button id="approveBtn">Approve</button></div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <dialog id="inspectDialog"><form method="dialog">
+    <header><h2>Action inspection</h2><button value="close">×</button></header>
+    <section><p><b>Target:</b> Executive intelligence workspace</p><p><b>Payload:</b> 12-page brief, claim map, citations, and source ledger.</p><p><b>Rollback:</b> Draft publication can be removed.</p><p><b>Evidence:</b> 24 sources, 18 indexed artifacts, and 12 passed checks.</p></section>
+    <footer><button value="close" class="primary">Return to airlock</button></footer>
+  </form></dialog>
+  <script src="app.js"></script>
+</body>
+</html>

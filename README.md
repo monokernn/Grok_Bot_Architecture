@@ -1,4 +1,4 @@
-# Grok Bot Company
+# Grok Bot Architecture
 
 **Autonomous multi-agent operations interface for research, production, evidence control, review, and human-approved delivery.**
 

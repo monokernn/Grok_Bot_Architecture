@@ -1,10 +1,8 @@
 # GROK BOT $ARCHITECTURE
 
-## [OPEN THE LIVE $ARCHITECTURE HOLDER EXPERIENCE →](https://archirecture-holders.com)
-
 ### THANK YOU TO EVERYONE SUPPORTING $ARCHITECTURE — THIS EXPERIENCE WAS BUILT FOR YOU, SO THE COMMUNITY CAN BECOME A VISIBLE PART OF THE PROJECT.
+###  → https://archirecture-holders.com
 
-**[$ARCHITECTURE HOLDER EXPERIENCE SOURCE CODE](https://github.com/monokernn/ARCHITECTURE_HOLDERS)**
 
 **Autonomous multi-agent operations interface for research, production, evidence control, review, and human-approved delivery.**
 

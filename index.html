@@ -46,6 +46,34 @@
         </div>
         <div class="canvas-wrap">
           <canvas id="stationCanvas"></canvas>
+          <button id="ledgerMini" class="ledger-mini" type="button">
+            <span>MISSION LEDGER</span><b id="ledgerCount">0 ARTIFACTS</b><em id="ledgerIntegrity">CHAIN READY</em>
+          </button>
+          <aside id="ledgerDrawer" class="ledger-drawer" hidden>
+            <header><div><span>EVENT-SOURCED MEMORY</span><h2>Mission Ledger</h2></div><button id="closeLedger" type="button">×</button></header>
+            <div class="ledger-summary">
+              <span>EVENTS<b id="ledgerEvents">0</b></span><span>ARTIFACTS<b id="ledgerArtifacts">0</b></span><span>INTEGRITY<b id="ledgerChain">READY</b></span>
+            </div>
+            <div id="ledgerDetail" class="ledger-detail"><span>SELECT AN ARTIFACT</span><p>Inspect its version, creator, SHA-256 hash, audit state, and parent lineage.</p></div>
+            <div class="ledger-section-title"><span>ARTIFACT LINEAGE</span><b id="ledgerPolicy">POLICY IDLE</b></div>
+            <div id="ledgerItems" class="ledger-items"></div>
+          </aside>
+          <div id="ledgerToast" class="ledger-toast" hidden>
+            <span id="ledgerToastEyebrow">ARTIFACT SEALED</span>
+            <b id="ledgerToastTitle">INTELLIGENCE BRIEF · v1</b>
+            <em id="ledgerToastMeta">SHA-256 VERIFIED · FORGE → VAULT</em>
+          </div>
+          <div id="artifactFlow" class="artifact-flow" aria-label="Artifact release pipeline">
+            <span data-flow="source"><i></i><small>SOURCES</small><b id="flowSource">WAITING</b></span>
+            <em>→</em>
+            <span data-flow="pack"><i></i><small>PACK</small><b id="flowPack">LOCKED</b></span>
+            <em>→</em>
+            <span data-flow="brief"><i></i><small>BRIEF</small><b id="flowBrief">LOCKED</b></span>
+            <em>→</em>
+            <span data-flow="audit"><i></i><small>AUDIT</small><b id="flowAudit">LOCKED</b></span>
+            <em>→</em>
+            <span data-flow="release"><i></i><small>RELEASE</small><b id="flowRelease">LOCKED</b></span>
+          </div>
           <div id="selection" class="selection"><span>SELECTED AGENT</span><b>HELM</b><p>Coordinating from the Command Bridge.</p></div>
           <div class="legend"><span><i class="dot green"></i>working</span><span><i class="dot amber"></i>handoff</span><span><i class="dot red"></i>approval</span></div>
         </div>
@@ -79,6 +107,7 @@
     <footer><button value="close" class="primary">Return to airlock</button></footer>
   </form></dialog>
   <script src="grokbot-adapter.js"></script>
+  <script src="mission-ledger.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

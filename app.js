@@ -3,6 +3,8 @@
 const $=s=>document.querySelector(s), canvas=$("#stationCanvas"), ctx=canvas.getContext("2d");
 const C={helm:"#ef5a52",forge:"#eda63a",sentinel:"#8d74d6",scout:"#a6cf58",archive:"#50bcb5",relay:"#4e91cf",green:"#a6cf58",amber:"#c99b3b",red:"#ef5a52",cyan:"#50bcb5",muted:"#747474"};
 const bridge=window.grokBot||null;
+const ledger=window.missionLedger||null,artifactPackets=[];
+let selectedArtifactId=null,ledgerToastTimer=null;
 const zones=[
  {id:"bridge",name:"COMMAND DESK",x:65,y:115,w:200,h:125,color:C.helm,type:"bridge"},
  {id:"build",name:"BUILD DESK",x:350,y:115,w:210,h:125,color:C.forge,type:"build"},
@@ -27,21 +29,21 @@ const timeline=[
  {at:1000,run(){event("helm","Mission opened","NS-INT-042 received: produce a decision-ready 2026 competitor brief.","cyan");agent("helm","working","breaking down request","bridge");stage("scope",1,"Scoping the intelligence mission","Helm is defining questions, owners, evidence rules, and the release boundary.")}},
  {at:12000,run(){event("helm","Work graph created","Five workstreams, 24-source target, and one approval gate assigned.","green");agent("helm","delegating","routing research scope","core");agent("scout","working","receiving research brief","core")}},
  {at:28000,run(){event("scout","Discovery started","Search plan expanded across product, hiring, pricing, and customer signals.","cyan");agent("helm","idle","watching dependency graph","lounge");agent("scout","working","reading source index","monitor");stage("research",9,"Research sweep in progress","Scout is collecting first-party sources and labeling confidence.")}},
- {at:47000,run(){event("scout","Source batch verified","Six primary links passed freshness and provenance checks.","green");agent("scout","working","sourced 6 links","library");state.artifacts=2}},
- {at:65000,run(){event("scout","Pricing evidence captured","Three plan changes and two packaging shifts added to the source ledger.","cyan");agent("scout","working","reading pricing pages","skill");state.artifacts=4}},
- {at:84000,run(){event("scout","Research pack ready","24 sources collected; 17 claims marked high confidence.","green");agent("scout","delegating","handing off 24 sources","core");agent("forge","working","receiving source pack","core");stage("synthesis",28,"Evidence is moving to synthesis","Scout and Forge are transferring the verified research pack.")}},
- {at:103000,run(){event("forge","Claim map started","Entities, products, dates, and claims normalized into one schema.","cyan");agent("scout","complete","research pack delivered","skill");agent("forge","working","mapping 12 entities","build")}},
+ {at:47000,run(){event("scout","Source batch verified","Six primary links passed freshness and provenance checks.","green");agent("scout","working","sourced 6 links","library");state.artifacts=2;sealArtifact({baseId:"source-batch",type:"source_set",label:"6 VERIFIED SOURCES",createdBy:"scout",payload:{count:6,provenance:"first-party",freshness:"verified"}})}},
+ {at:65000,run(){event("scout","Pricing evidence captured","Three plan changes and two packaging shifts added to the source ledger.","cyan");agent("scout","working","reading pricing pages","skill");state.artifacts=4;sealArtifact({baseId:"pricing-evidence",type:"evidence",label:"PRICING EVIDENCE",createdBy:"scout",parentIds:["source-batch"],payload:{planChanges:3,packagingShifts:2}})}},
+ {at:84000,run(){event("scout","Research pack ready","24 sources collected; 17 claims marked high confidence.","green");agent("scout","delegating","handing off 24 sources","core");agent("forge","working","receiving source pack","core");stage("synthesis",28,"Evidence is moving to synthesis","Scout and Forge are transferring the verified research pack.");sealArtifact({baseId:"research-pack",type:"research_pack",label:"24-SOURCE PACK",createdBy:"scout",parentIds:["source-batch","pricing-evidence"],payload:{sources:24,highConfidenceClaims:17}})}},
+ {at:103000,run(){event("forge","Claim map started","Entities, products, dates, and claims normalized into one schema.","cyan");agent("scout","complete","research pack delivered","skill");agent("forge","working","mapping 12 entities","build");sealArtifact({baseId:"claim-map",type:"claim_map",label:"CLAIM MAP",createdBy:"forge",parentIds:["research-pack"],payload:{entities:12,schema:"normalized"}})}},
  {at:124000,run(){event("forge","Contradiction detected","Two revenue claims conflict; both retained with confidence notes.","amber");agent("forge","working","resolving 2 conflicts","printer")}},
- {at:145000,run(){event("forge","Synthesis complete","Draft now contains 8 findings, 3 risks, and 5 strategic moves.","green");agent("forge","working","rendering 12-page brief","build");state.artifacts=9}},
- {at:162000,run(){event("forge","Evidence bundle prepared","Brief, claim map, and source ledger packaged for persistence.","cyan");agent("forge","delegating","handing off evidence pack","core");agent("archive","working","receiving 18 artifacts","core");stage("evidence",54,"Evidence pack is being secured","Forge and Archive are transferring traceable mission artifacts.")}},
+ {at:145000,run(){event("forge","Synthesis complete","Draft now contains 8 findings, 3 risks, and 5 strategic moves.","green");agent("forge","working","rendering 12-page brief","build");state.artifacts=9;sealArtifact({baseId:"brief",type:"brief",label:"INTELLIGENCE BRIEF",createdBy:"forge",parentIds:["claim-map"],payload:{pages:12,findings:8,risks:3,moves:5,revisionNote:"initial synthesis"}})}},
+ {at:162000,run(){event("forge","Evidence bundle prepared","Brief, claim map, and source ledger packaged for persistence.","cyan");agent("forge","delegating","handing off evidence pack","core");agent("archive","working","receiving 18 artifacts","core");stage("evidence",54,"Evidence pack is being secured","Forge and Archive are transferring traceable mission artifacts.");sealArtifact({baseId:"evidence-bundle",type:"evidence_bundle",label:"EVIDENCE BUNDLE",createdBy:"forge",parentIds:["brief","research-pack"],payload:{artifacts:18,rollback:true}})}},
  {at:181000,run(){event("archive","Index write started","Content hashes and citation backlinks are being generated.","cyan");agent("forge","complete","synthesis delivered","build");agent("archive","working","writing evidence index","server")}},
- {at:199000,run(){event("archive","Artifacts indexed","18 artifacts stored with source-level lineage and rollback metadata.","green");agent("archive","working","indexed 18 artifacts","vault");state.artifacts=18}},
+ {at:199000,run(){event("archive","Artifacts indexed","18 artifacts stored with source-level lineage and rollback metadata.","green");agent("archive","working","indexed 18 artifacts","vault");state.artifacts=18;sealArtifact({baseId:"evidence-index",type:"evidence_index",label:"EVIDENCE INDEX",createdBy:"archive",parentIds:["evidence-bundle"],payload:{indexed:18,lineage:"source-level",rollback:true}})}},
  {at:215000,run(){event("sentinel","Independent audit started","Citation coverage, claim support, and release rules loaded.","violet");agent("archive","idle","evidence vault synced","library");agent("sentinel","reviewing","cross-checking 24 citations","audit");stage("review",71,"Independent audit in progress","Sentinel is testing every material claim against the evidence ledger.")}},
- {at:236000,run(){event("sentinel","Automated checks passed","12 of 12 structural and safety checks are green.","green");agent("sentinel","reviewing","running final checks","monitor")}},
- {at:252000,run(){event("sentinel","One warning resolved","A duplicate market-size claim was removed from the executive summary.","amber");agent("sentinel","reviewing","verifying corrected claim","audit")}},
- {at:267000,run(){event("sentinel","Audit passed","All material claims have citations; no blocking issue remains.","green");agent("sentinel","complete","audit passed: 12/12","audit");agent("helm","working","assembling decision packet","core");agent("relay","working","receiving approved draft","core");stage("release",89,"Preparing the controlled release","Helm and Relay are assembling the final decision packet.")}},
+ {at:236000,run(){event("sentinel","Automated checks passed","12 of 12 structural and safety checks are green.","green");agent("sentinel","reviewing","running final checks","monitor");ledgerCall("auditArtifact","brief","sentinel",12)}},
+ {at:252000,run(){event("sentinel","One warning resolved","A duplicate market-size claim was removed from the executive summary.","amber");agent("sentinel","reviewing","verifying corrected claim","audit");ledgerCall("reviseArtifact","brief",{revisionNote:"duplicate market-size claim removed",findings:7},"sentinel")}},
+ {at:267000,run(){event("sentinel","Audit passed","All material claims have citations; no blocking issue remains.","green");agent("sentinel","complete","audit passed: 12/12","audit");agent("helm","working","assembling decision packet","core");agent("relay","working","receiving approved draft","core");stage("release",89,"Preparing the controlled release","Helm and Relay are assembling the final decision packet.");ledgerCall("auditArtifact","brief","sentinel",12);sealArtifact({baseId:"audit-receipt",type:"audit_receipt",label:"AUDIT PASS 12/12",createdBy:"sentinel",parentIds:["brief","evidence-index"],payload:{checks:12,verdict:"pass"}})}},
  {at:281000,run(){event("relay","Release packet staged","12-page brief and evidence links are ready at the approval boundary.","cyan");agent("helm","waiting approval","decision packet ready","lounge");agent("relay","waiting approval","awaiting final yes","airlock")}},
- {at:290000,run(){event("relay","Human decision requested","Publication is paused at the Approval Airlock.","amber");stage("release",97,"Final approval required","The complete intelligence brief is waiting for one human decision.");requestApproval()}}
+ {at:290000,run(){event("relay","Human decision requested","Publication is paused at the Approval Airlock.","amber");stage("release",97,"Final approval required","The complete intelligence brief is waiting for one human decision.");ledgerCall("evaluatePolicy","publish","brief");requestApproval()}}
 ];
 function renderRoster(){
  $("#agentRoster").innerHTML=agents.map(a=>'<article class="agent-card '+(state.selected===a.id?"selected":"")+'" data-id="'+a.id+'" style="--agent:'+a.color+'"><div class="avatar">'+a.letter+'</div><div class="agent-head"><b>'+a.name.toUpperCase()+'</b><span>'+a.state+'</span></div><div class="agent-role">'+a.role+'</div><div class="agent-task"><i></i>'+a.task+'</div></article>').join("");
@@ -79,6 +81,67 @@ function event(actor,title,message,tone){
  $("#eventFeed").prepend(el);state.count++;$("#eventCount").textContent=String(state.count).padStart(2,"0")+" EVENTS";
  if(bridge)bridge.recordEvent({missionId:"NS-INT-042",actor,title,message,tone});
 }
+function ledgerCall(method,...args){if(!ledger||typeof ledger[method]!=="function")return Promise.resolve(null);return ledger[method](...args).catch(error=>{event("ledger","Ledger warning",error.message,"red");return null})}
+function sealArtifact(spec){return ledgerCall("createArtifact",spec)}
+function artifactColor(artifact){return C[artifact.createdBy]||C.cyan}
+function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[char]))}
+function launchArtifactPacket(artifact){
+ const source=agents.find(a=>a.id===artifact.createdBy)||agents[0],targets={source_set:"forge",evidence:"forge",research_pack:"forge",claim_map:"archive",brief:"archive",evidence_bundle:"archive",evidence_index:"sentinel",audit_receipt:"relay"},target=agents.find(a=>a.id===targets[artifact.type])||agents.find(a=>a.id==="archive");
+ artifactPackets.push({artifactId:artifact.artifactId,label:artifact.label||artifact.baseId,color:artifactColor(artifact),x1:source.x,y1:source.y-18,x2:target.x,y2:target.y-18,born:performance.now(),duration:4300});
+}
+function showArtifact(artifactId){
+ if(!ledger)return;const snapshot=ledger.snapshot(),artifact=snapshot.artifacts.find(item=>item.artifactId===artifactId);if(!artifact)return;selectedArtifactId=artifactId;
+ const parents=artifact.parentIds.length?artifact.parentIds.join(" → "):"GENESIS",audit=artifact.audit&&artifact.audit.status==="passed"?"PASSED · "+artifact.audit.checks+" checks":"NOT ATTACHED";
+ $("#ledgerDetail").innerHTML='<span>ARTIFACT PASSPORT</span><b>'+escapeHtml(artifact.label)+' · v'+artifact.version+'</b><p>Created by '+escapeHtml(artifact.createdBy.toUpperCase())+' · '+escapeHtml(artifact.type)+'<br>Parents: '+escapeHtml(parents)+'<br>Audit: '+escapeHtml(audit)+'</p><code>SHA-256 '+escapeHtml(artifact.hash)+'</code>';
+ document.querySelectorAll(".ledger-card").forEach(card=>card.classList.toggle("selected",card.dataset.artifact===artifactId));
+}
+function showLedgerToast(eyebrow,title,meta,tone=""){
+ const toast=$("#ledgerToast");if(!toast)return;clearTimeout(ledgerToastTimer);toast.hidden=true;toast.className="ledger-toast"+(tone?" "+tone:"");$("#ledgerToastEyebrow").textContent=eyebrow;$("#ledgerToastTitle").textContent=title;$("#ledgerToastMeta").textContent=meta;void toast.offsetWidth;toast.hidden=false;ledgerToastTimer=setTimeout(()=>toast.hidden=true,3600);
+}
+function updateFlowNode(id,state,label){
+ const node=document.querySelector('[data-flow="'+id+'"]'),value=$("#flow"+id[0].toUpperCase()+id.slice(1));if(!node||!value)return;node.className=state==="locked"?"":state;value.textContent=label;
+}
+function updateArtifactFlow(snapshot,stale){
+ const artifacts=snapshot.artifacts,source=artifacts.find(a=>a.type==="source_set"),pack=artifacts.find(a=>a.type==="research_pack"),brief=artifacts.filter(a=>a.baseId==="brief").sort((a,b)=>b.version-a.version)[0],auditCurrent=!!(brief&&brief.audit&&brief.audit.status==="passed"&&brief.audit.artifactHash===brief.hash),policy=snapshot.policy;
+ updateFlowNode("source",source?"done":snapshot.missionId?"active":"locked",source?"6 SEALED":snapshot.missionId?"COLLECTING":"WAITING");
+ updateFlowNode("pack",pack?"done":source?"active":"locked",pack?"24 SOURCES":source?"BUILDING":"LOCKED");
+ updateFlowNode("brief",brief?"done":pack?"active":"locked",brief?"v"+brief.version+" · HASHED":pack?"WRITING":"LOCKED");
+ updateFlowNode("audit",stale?"stale":auditCurrent?"done":brief?"active":"locked",stale?"STALE":auditCurrent?brief.audit.checks+"/12 PASS":brief?"PENDING":"LOCKED");
+ updateFlowNode("release",policy?(policy.decision==="blocked"?"stale":policy.decision==="approval_required"?"waiting":"done"):auditCurrent?"active":"locked",policy?policy.decision==="blocked"?"BLOCKED":policy.decision==="approval_required"?"APPROVAL":"CLEARED":auditCurrent?"CHECKING":"LOCKED");
+}
+function renderLedger(snapshot){
+ if(!snapshot)return;const artifacts=snapshot.artifacts.slice().sort((a,b)=>b.createdAt.localeCompare(a.createdAt)),latestBrief=artifacts.filter(a=>a.baseId==="brief").sort((a,b)=>b.version-a.version)[0],oldAudit=artifacts.some(a=>a.baseId==="brief"&&a.audit&&a.audit.status==="passed"),stale=!!(latestBrief&&oldAudit&&(!latestBrief.audit||latestBrief.audit.artifactHash!==latestBrief.hash));
+ const mini=$("#ledgerMini"),integrity=snapshot.integrity==="compromised"?"CHAIN BROKEN":stale?"AUDIT STALE":snapshot.integrity==="verified"?"CHAIN VERIFIED":"CHAIN ACTIVE";
+ mini.classList.toggle("stale",stale);mini.classList.toggle("compromised",snapshot.integrity==="compromised");$("#ledgerCount").textContent=artifacts.length+" ARTIFACT"+(artifacts.length===1?"":"S");$("#ledgerIntegrity").textContent=integrity;
+ updateArtifactFlow(snapshot,stale);
+ $("#ledgerEvents").textContent=snapshot.events.length;$("#ledgerArtifacts").textContent=artifacts.length;$("#ledgerChain").textContent=snapshot.integrity.toUpperCase();
+ const policy=snapshot.policy,policyNode=$("#ledgerPolicy");policyNode.textContent=policy?policy.decision.replaceAll("_"," ").toUpperCase():"POLICY IDLE";policyNode.className=policy?(policy.decision==="blocked"?"blocked":policy.decision==="approval_required"?"waiting":"pass"):"";
+ $("#ledgerItems").innerHTML=artifacts.length?artifacts.map(artifact=>'<button class="ledger-card'+(artifact.artifactId===selectedArtifactId?" selected":"")+'" data-artifact="'+escapeHtml(artifact.artifactId)+'" style="--artifact:'+artifactColor(artifact)+'"><strong>'+escapeHtml(artifact.label)+'<em>v'+artifact.version+'</em></strong><small>'+escapeHtml(artifact.createdBy.toUpperCase())+' · '+escapeHtml(artifact.parentIds.length+" PARENTS")+'</small><code>'+escapeHtml(artifact.hash.slice(0,16))+'…</code></button>').join(""):'<div class="ledger-detail"><span>LEDGER EMPTY</span><p>Start the mission to create the first cryptographically sealed artifact.</p></div>';
+ document.querySelectorAll(".ledger-card").forEach(card=>card.onclick=()=>showArtifact(card.dataset.artifact));
+ if(selectedArtifactId&&!artifacts.some(a=>a.artifactId===selectedArtifactId))selectedArtifactId=null;
+}
+function bindLedger(){
+ if(!ledger)return;
+ ledger.addEventListener("change",e=>renderLedger(e.detail));
+ ledger.addEventListener("artifact",e=>{launchArtifactPacket(e.detail);renderLedger(ledger.snapshot());showLedgerToast("ARTIFACT SEALED",e.detail.label+" · v"+e.detail.version,"SHA-256 "+e.detail.hash.slice(0,12)+"… · "+e.detail.createdBy.toUpperCase()+" → LEDGER");event("ledger","Artifact sealed",e.detail.label+" v"+e.detail.version+" · sha256 "+e.detail.hash.slice(0,10)+"…","cyan")});
+ ledger.addEventListener("audit",e=>{renderLedger(ledger.snapshot());showLedgerToast("AUDIT BOUND TO CURRENT HASH",e.detail.artifact.label+" · "+e.detail.artifact.audit.checks+"/12 CHECKS","SENTINEL VERIFIED "+e.detail.artifact.hash.slice(0,12)+"…","pass");event("sentinel","Cryptographic audit attached",e.detail.artifact.artifactId+" is bound to its current SHA-256 hash.","green")});
+ ledger.addEventListener("audit-stale",e=>{renderLedger(ledger.snapshot());showLedgerToast("AUDIT STALE",e.detail.artifact.label+" CHANGED AFTER REVIEW","RELEASE BLOCKED · RE-AUDIT REQUIRED","stale");event("ledger","Audit invalidated",e.detail.artifact.artifactId+" changed after review and must be audited again.","red")});
+ ledger.addEventListener("policy",e=>{renderLedger(ledger.snapshot());showLedgerToast("RELEASE POLICY EVALUATED",e.detail.decision.replaceAll("_"," ").toUpperCase(),e.detail.decision==="approval_required"?"LINEAGE + CURRENT AUDIT VERIFIED · WAITING FOR HUMAN":"POLICY CHECKS RECORDED",e.detail.decision==="blocked"?"stale":e.detail.decision==="approval_required"?"waiting":"pass");event("policy","Release policy evaluated",e.detail.decision.replaceAll("_"," ")+" · audit and lineage checks recorded.","amber")});
+ renderLedger(ledger.snapshot());
+ $("#ledgerMini").onclick=()=>{const drawer=$("#ledgerDrawer");drawer.hidden=false;$("#ledgerMini").hidden=true;const latest=ledger.snapshot().artifacts.slice().sort((a,b)=>b.createdAt.localeCompare(a.createdAt))[0];if(latest)showArtifact(latest.artifactId)};
+ $("#closeLedger").onclick=()=>{$("#ledgerDrawer").hidden=true;$("#ledgerMini").hidden=false};
+}
+async function ledgerShowcase(){
+ if(!ledger)return;await ledger.startMission("NS-INT-042");
+ await ledger.createArtifact({baseId:"source-batch",type:"source_set",label:"6 VERIFIED SOURCES",createdBy:"scout",payload:{count:6,provenance:"first-party"}});
+ await ledger.createArtifact({baseId:"pricing-evidence",type:"evidence",label:"PRICING EVIDENCE",createdBy:"scout",parentIds:["source-batch"],payload:{planChanges:3,packagingShifts:2}});
+ await ledger.createArtifact({baseId:"research-pack",type:"research_pack",label:"24-SOURCE PACK",createdBy:"scout",parentIds:["source-batch","pricing-evidence"],payload:{sources:24,highConfidenceClaims:17}});
+ await ledger.createArtifact({baseId:"claim-map",type:"claim_map",label:"CLAIM MAP",createdBy:"forge",parentIds:["research-pack"],payload:{entities:12}});
+ await ledger.createArtifact({baseId:"brief",type:"brief",label:"INTELLIGENCE BRIEF",createdBy:"forge",parentIds:["claim-map"],payload:{pages:12,findings:8}});
+ await ledger.auditArtifact("brief","sentinel",12);await ledger.reviseArtifact("brief",{findings:7,revisionNote:"duplicate claim removed"},"sentinel");await ledger.auditArtifact("brief","sentinel",12);
+ await ledger.createArtifact({baseId:"audit-receipt",type:"audit_receipt",label:"AUDIT PASS 12/12",createdBy:"sentinel",parentIds:["brief"],payload:{checks:12,verdict:"pass"}});await ledger.evaluatePolicy("publish","brief");
+ $("#ledgerDrawer").hidden=false;$("#ledgerMini").hidden=true;showArtifact(ledger.latest("brief").artifactId);
+}
 function formatDuration(ms){const total=Math.max(0,Math.ceil(ms/1000)),m=Math.floor(total/60),s=total%60;return String(m).padStart(2,"0")+":"+String(s).padStart(2,"0")}
 function stage(name,progress,title,sub){
  $("#progressBar").style.width=progress+"%";$("#progressLabel").textContent=progress===100?"100% · COMPLETE":progress+"% · "+formatDuration(state.duration-state.elapsed)+" left";$("#missionTitle").textContent=title;$("#missionSub").textContent=sub;
@@ -92,11 +155,13 @@ function requestApproval(){
 function resolve(ok){
  if(!state.approval)return;state.approval=false;$("#approvalIdle").hidden=false;$("#approvalRequest").hidden=true;$("#airlockMetric").textContent="CLEAR";$("#airlockMetric").style.color="";
  if(bridge)bridge.resolveApproval(ok?"approved":"rejected");
+ ledgerCall("recordApproval",ok?"approved":"rejected");
  if(ok){event("operator","Action approved","The intelligence brief passed through the Approval Airlock.","green");agent("relay","complete","release approved","airlock");agent("helm","complete","mission completed","bridge");stage("release",100,"Mission complete","Six agents produced an audited brief with a traceable evidence record.");$("#riskBadge").textContent="COMPLETED";$("#riskBadge").style.color=C.green;state.complete=true;state.spend=4.07;$("#spendMetric").textContent="$4.07";setTimeout(()=>event("helm","Mission completed","NS-INT-042 closed with a clean evidence record.","green"),500);burst(points.bridge.x,points.bridge.y,C.green,24)}
  else{state.rejected=true;event("operator","Action rejected","Publication blocked; all artifacts remain reversible in the Vault.","red");agent("relay","idle","release cancelled","airlock");agent("helm","working","revising release plan","bridge");agent("forge","working","preparing private revision","build");stage("synthesis",48,"Returned for revision","The external action was rejected; the evidence pack remains intact.");$("#riskBadge").textContent="REVISION";$("#riskBadge").style.color=C.amber}
 }
 function start(){
  if(state.complete||state.rejected||state.cursor>=timeline.length)reset(false);if(state.approval)return;
+ if(state.elapsed===0){artifactPackets.length=0;selectedArtifactId=null;ledgerCall("startMission","NS-INT-042")}
  state.running=true;state.paused=false;$("#startBtn").textContent="● Mission running";event("system","System started","Grok Bot Company event loop is active.","cyan");
  if(bridge)bridge.startMission({id:"NS-INT-042",objective:"Build the 2026 competitor intelligence brief",agents:agents.map(a=>a.id)}).then(ack=>event("grok","Command acknowledged","mission.start accepted as #"+ack.sequence+" in "+ack.latency+"ms.","green")).catch(()=>event("grok","Transport warning","Mission continues locally; command acknowledgement was not received.","amber"));
 }
@@ -109,6 +174,7 @@ function reset(announce=true){
  $("#approvalIdle").hidden=false;$("#approvalRequest").hidden=true;$("#airlockMetric").textContent="CLEAR";$("#airlockMetric").style.color="";$("#spendMetric").textContent="$0.42";$("#riskBadge").textContent="LOW RISK";$("#riskBadge").style.color="";$("#startBtn").textContent="▶ Start mission";$("#pauseBtn").textContent="Ⅱ";
  stage(null,0,"Build the 2026 competitor intelligence brief","Research 24 sources, map claims, build an evidence pack, audit, and prepare release.");document.querySelectorAll("#stages span").forEach(n=>n.classList.remove("active","done"));renderRoster();select("helm");if(announce)event("system","Mission reset","All agents returned to their stations; the five-minute clock is ready.","amber");
  if(bridge&&announce)bridge.resetMission();
+ if(ledger&&announce){artifactPackets.length=0;selectedArtifactId=null;ledgerCall("startMission","NS-INT-042")}
 }
 function burst(x,y,color,count){for(let i=0;i<count;i++)state.particles.push({x,y,color,life:1,dx:(Math.random()-.5)*2.8,dy:(Math.random()-.5)*2.8})}
 function resize(){const r=canvas.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);canvas.width=Math.max(1,r.width*d);canvas.height=Math.max(1,r.height*d);ctx.setTransform(d,0,0,d,0,0);ctx.imageSmoothingEnabled=false}
@@ -186,6 +252,13 @@ function drawAgent(a){
  ctx.textAlign="left";
 }
 function particles(){state.particles.forEach(p=>{ctx.globalAlpha=Math.max(0,p.life);ctx.fillStyle=p.color;ctx.fillRect(p.x,p.y,3,3);p.x+=p.dx;p.y+=p.dy;p.life-=.025});ctx.globalAlpha=1;state.particles=state.particles.filter(p=>p.life>0)}
+function drawArtifactPackets(){
+ const now=performance.now();
+ for(let i=artifactPackets.length-1;i>=0;i--){const packet=artifactPackets[i],t=Math.min(1,(now-packet.born)/packet.duration),ease=t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2,x=packet.x1+(packet.x2-packet.x1)*ease,y=packet.y1+(packet.y2-packet.y1)*ease-Math.sin(t*Math.PI)*52,alpha=t>.82?(1-t)/.18:1;
+  ctx.globalAlpha=Math.max(0,alpha);ctx.strokeStyle=packet.color+"88";ctx.setLineDash([2,6]);ctx.beginPath();ctx.moveTo(packet.x1,packet.y1);ctx.quadraticCurveTo((packet.x1+packet.x2)/2,Math.min(packet.y1,packet.y2)-70,packet.x2,packet.y2);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle="#080908";ctx.fillRect(x-10,y-13,20,25);ctx.strokeStyle=packet.color;ctx.strokeRect(x-9.5,y-12.5,19,24);ctx.fillStyle=packet.color;ctx.fillRect(x-5,y-7,10,2);ctx.fillRect(x-5,y-2,10,2);ctx.fillRect(x-5,y+3,7,2);
+  const label=packet.label.toUpperCase().slice(0,22);ctx.font="bold 7px monospace";const width=Math.min(118,ctx.measureText(label).width+12);ctx.fillStyle="#070807ed";ctx.fillRect(x-width/2,y+16,width,13);ctx.fillStyle=packet.color;ctx.textAlign="center";ctx.fillText(label,x,y+25);ctx.textAlign="left";ctx.globalAlpha=1;if(t>=1)artifactPackets.splice(i,1)}
+}
 function move(dt){agents.forEach(a=>{const dx=a.tx-a.x,dy=a.ty-a.y,d=Math.hypot(dx,dy);if(d>1){const step=Math.min(d,dt*.11);a.x+=dx/d*step;a.y+=dy/d*step;if(Math.random()<.07)state.particles.push({x:a.x,y:a.y+18,color:a.color,life:.35,dx:0,dy:.3})}else if(a.path&&a.path.length){const next=a.path.shift();a.tx=next.x;a.ty=next.y}})}
 function ambient(now){
  const phrases={helm:["checking dependencies","watching floor status"],forge:["checking build queue","fetching component spec"],sentinel:["sampling event logs","checking safety rules"],scout:["scanning signal board","reading source notes"],archive:["checking artifact hashes","syncing source ledger"],relay:["checking approval queue","staging delivery route"]};
@@ -197,7 +270,7 @@ function interactions(){
  agents.forEach(a=>{if(a.state==="working"||a.state==="reviewing"){ctx.fillStyle="#080908e8";ctx.fillRect(a.x-15,a.y-37,30,11);ctx.fillStyle=a.color;for(let i=0;i<3;i++)ctx.fillRect(a.x-7+i*7,a.y-33,3,3)}});
  for(let i=0;i<agents.length;i++)for(let j=i+1;j<agents.length;j++){const a=agents[i],b=agents[j],d=Math.hypot(a.x-b.x,a.y-b.y);if(d<122&&(a.zone==="core"||b.zone==="core")){const x=(a.x+b.x)/2,y=Math.min(a.y,b.y)-43,t=(performance.now()/1100)%1,px=a.x+(b.x-a.x)*t,py=a.y-15+(b.y-a.y)*t;ctx.strokeStyle="#8b8069";ctx.setLineDash([2,4]);ctx.beginPath();ctx.moveTo(a.x,a.y-15);ctx.lineTo(b.x,b.y-15);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle="#e0cf8a";ctx.fillRect(px-3,py-3,6,6);ctx.fillStyle="#080908";ctx.fillRect(x-31,y,62,13);ctx.fillStyle="#d2c598";ctx.font="bold 7px monospace";ctx.textAlign="center";ctx.fillText("LIVE HANDOFF",x,y+9);ctx.textAlign="left"}}
 }
-function draw(){const w=canvas.clientWidth,h=canvas.clientHeight;ctx.clearRect(0,0,w,h);const t=transform();ctx.save();ctx.translate(t.ox,t.oy);ctx.scale(t.s,t.s);room();furniture();particles();agents.forEach(drawAgent);interactions();ctx.restore()}
+function draw(){const w=canvas.clientWidth,h=canvas.clientHeight;ctx.clearRect(0,0,w,h);const t=transform();ctx.save();ctx.translate(t.ox,t.oy);ctx.scale(t.s,t.s);room();furniture();particles();drawArtifactPackets();agents.forEach(drawAgent);interactions();ctx.restore()}
 function tick(now){const dt=Math.min(40,now-state.last);state.last=now;if(state.running&&!state.approval){state.elapsed=Math.min(state.duration,state.elapsed+dt*state.speed);while(state.cursor<timeline.length&&state.elapsed>=timeline[state.cursor].at)timeline[state.cursor++].run();if(!state.approval){const progress=Math.min(96,Math.floor(state.elapsed/state.duration*100));$("#progressBar").style.width=progress+"%";$("#progressLabel").textContent=progress+"% · "+formatDuration(state.duration-state.elapsed)+" left"}state.spend=Math.min(4.07,.42+state.elapsed/1000*.0122);$("#spendMetric").textContent="$"+state.spend.toFixed(2)}ambient(now);move(dt);draw();requestAnimationFrame(tick)}
 function canvasClick(e){const r=canvas.getBoundingClientRect(),t=transform(),x=(e.clientX-r.left-t.ox)/t.s,y=(e.clientY-r.top-t.oy)/t.s,a=agents.find(q=>Math.hypot(q.x-x,q.y-y)<30);if(a)return select(a.id);const z=zones.find(q=>x>=q.x&&x<=q.x+q.w&&y>=q.y&&y<=q.y+q.h);if(z){const box=$("#selection"),crew=agents.filter(a=>a.zone===z.id).length;box.querySelector("span").textContent="STATION ZONE";box.querySelector("b").textContent=z.name;box.querySelector("p").textContent=crew+" crew assigned · "+z.type.toUpperCase()+" subsystem online.";box.style.borderColor=z.color;box.querySelector("span").style.color=z.color}}
 function clock(){$("#clock").textContent=new Intl.DateTimeFormat("en-GB",{timeZone:"Europe/Moscow",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false}).format(new Date())}
@@ -219,12 +292,14 @@ function bindTransport(){
 }
 $("#startBtn").onclick=start;$("#pauseBtn").onclick=pause;$("#resetBtn").onclick=()=>reset();$("#speed").onchange=e=>{state.speed=Number(e.target.value);event("system","Timeline speed changed","System is running at "+state.speed+"×.","amber")};$("#approveBtn").onclick=()=>resolve(true);$("#rejectBtn").onclick=()=>resolve(false);$("#inspectBtn").onclick=()=>$("#inspectDialog").showModal();$("#clearFeed").onclick=()=>{$("#eventFeed").innerHTML="";state.count=0;$("#eventCount").textContent="00 EVENTS"};canvas.onclick=canvasClick;window.onresize=resize;if("ResizeObserver"in window)new ResizeObserver(resize).observe(canvas);
 window.onkeydown=e=>{if(e.code==="Space"&&e.target.tagName!=="BUTTON"){e.preventDefault();state.running?pause():start()}if(e.key.toLowerCase()==="r")reset()};
+bindLedger();
 bindTransport();
 renderRoster();resize();select("helm");stage(null,0,"Build the 2026 competitor intelligence brief","Research 24 sources, map claims, build an evidence pack, audit, and prepare release.");document.querySelectorAll("#stages span").forEach(n=>n.classList.remove("active","done"));
 event("system","Station online","Room telemetry, pathing, and the five-minute mission clock are live.","green");event("vault","Evidence store mounted","Workspace is ready for source-linked artifacts.","cyan");event("airlock","Safety boundary armed","Publication requires one operator decision.","amber");
 clock();setInterval(clock,1000);requestAnimationFrame(tick);
 const autoplay=new URLSearchParams(location.search).get("autoplay");
-if(autoplay==="handoff")setTimeout(()=>{state.elapsed=84000;agent("scout","delegating","handing off 24 sources","core");agent("forge","working","receiving source pack","core");const scout=agents.find(x=>x.id==="scout"),forge=agents.find(x=>x.id==="forge");Object.assign(scout,{x:510,y:300,tx:510,ty:300,path:[]});Object.assign(forge,{x:400,y:292,tx:400,ty:292,path:[]});event("scout","Live handoff","Scout and Forge are transferring the verified source pack.","amber");stage("synthesis",28,"Live evidence handoff","Two agents are exchanging 24 verified sources at the common table.")},250);
+if(autoplay==="ledger")setTimeout(ledgerShowcase,250);
+else if(autoplay==="handoff")setTimeout(()=>{state.elapsed=84000;agent("scout","delegating","handing off 24 sources","core");agent("forge","working","receiving source pack","core");const scout=agents.find(x=>x.id==="scout"),forge=agents.find(x=>x.id==="forge");Object.assign(scout,{x:510,y:300,tx:510,ty:300,path:[]});Object.assign(forge,{x:400,y:292,tx:400,ty:292,path:[]});event("scout","Live handoff","Scout and Forge are transferring the verified source pack.","amber");stage("synthesis",28,"Live evidence handoff","Two agents are exchanging 24 verified sources at the common table.")},250);
 else if(autoplay==="approval")setTimeout(()=>{state.elapsed=290000;event("relay","Human decision requested","The audited brief is paused at the release boundary.","amber");agent("sentinel","complete","audit passed: 12/12","audit");agent("relay","waiting approval","awaiting final yes","airlock");agent("helm","waiting approval","decision packet ready","lounge");stage("release",97,"Final approval required","The complete intelligence brief is waiting for one human decision.");requestApproval()},250);
 else if(autoplay){state.speed=50;$("#speed").value="10";setTimeout(start,250)}
 })();

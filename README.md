@@ -18,6 +18,10 @@ The included mission, **NS-INT-042**, demonstrates a complete competitor-intelli
 - Animated wall telemetry, workstation displays, city lights, and a real-time analog clock.
 - A mission timeline with progress, ETA, cost, artifacts, and operational stages.
 - A realistic event feed containing source discovery, handoffs, warnings, audit results, and system events.
+- A cryptographic Mission Ledger with SHA-256 hashes, artifact versions, and parent lineage.
+- A persistent visual release rail: `SOURCES → PACK → BRIEF → AUDIT → RELEASE`.
+- Large in-room system notices for sealed artifacts, stale audits, and policy decisions.
+- Audit invalidation when an already-reviewed artifact is revised.
 - Human approval controls for external or high-impact actions.
 - Responsive full-screen layout for desktop, laptop, tablet, and mobile widths.
 - No framework, package installation, build process, or API key required.
@@ -136,6 +140,29 @@ The browser currently loads `grokbot-adapter.js` before the interface engine. It
 
 The header deliberately displays `SIM` next to `GROK LINK`. Replace `window.grokBot` with an adapter exposing the same methods to connect a real service without changing the canvas renderer or mission controls.
 
+### Mission Ledger and artifact lineage
+
+`mission-ledger.js` is a real event-sourced subsystem running in the browser:
+
+- every ledger event includes the SHA-256 hash of the preceding event;
+- artifact payloads are hashed using the Web Crypto API;
+- every revision creates a new immutable artifact version;
+- parent artifact IDs form a traceable lineage graph;
+- an audit is bound to the exact hash it reviewed;
+- changing an audited brief automatically marks that audit as stale;
+- the release policy verifies lineage and the current audit hash before requesting human approval;
+- the ledger, artifacts, and latest policy decision persist in `localStorage`.
+
+Click **MISSION LEDGER** in the upper-left corner of the Operations Floor to inspect artifact passports and full hashes. The release rail stays visible along the bottom of the room and updates as the mission creates, audits, and approves work.
+
+For the instant visual showcase, open:
+
+```text
+index.html?autoplay=ledger
+```
+
+This preloads a complete artifact lineage, opens the inspector, draws handoff packets across the room, and stops on the visible `APPROVAL REQUIRED` policy state.
+
 Suggested production event format:
 
 ```json
@@ -159,6 +186,7 @@ Consequential operations should always be represented as approval requests and m
 ├── index.html          Application shell and control panels
 ├── app.js              Mission engine, routing, agents, canvas renderer
 ├── grokbot-adapter.js  Mock transport, commands, heartbeat, persistence
+├── mission-ledger.js   Hash chain, artifact versions, lineage, policies
 ├── styles.css          Base layout and component styles
 ├── theme-muted.css     Grok Bot Company theme and responsive rules
 ├── preview.png         Current interface preview
@@ -171,6 +199,7 @@ Consequential operations should always be represented as approval requests and m
 - Add or edit mission events in the `timeline` array.
 - Adjust the five-minute runtime using `state.duration`.
 - Add room destinations in the `points` object.
+- Add artifact types and lineage relationships through `sealArtifact()` calls in the timeline.
 - Change desktop and compact layouts in the `VIEWPORT-LOCKED RESPONSIVE SHELL` section of `theme-muted.css`.
 - Replace events with backend messages while keeping the existing `agent()`, `event()`, and `stage()` update model.
 

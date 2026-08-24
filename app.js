@@ -93,7 +93,7 @@ function resolve(ok){
 }
 function start(){
  if(state.complete||state.rejected||state.cursor>=timeline.length)reset(false);if(state.approval)return;
- state.running=true;state.paused=false;$("#startBtn").textContent="● Mission running";event("system","Simulation started","Night Shift event loop is active.","cyan");
+ state.running=true;state.paused=false;$("#startBtn").textContent="● Mission running";event("system","Simulation started","Grok Bot Company event loop is active.","cyan");
 }
 function pause(){
  if(state.approval||state.complete)return;state.paused=!state.paused;state.running=!state.paused;$("#pauseBtn").textContent=state.paused?"▶":"Ⅱ";event("system",state.paused?"Simulation paused":"Simulation resumed",state.paused?"Timeline execution is holding.":"Timeline execution continues.","amber");
@@ -138,7 +138,7 @@ function room(){
  ctx.fillStyle="#12110f";ctx.fillRect(0,0,900,108);ctx.fillStyle="#2b2118";ctx.fillRect(0,101,900,8);
  ctx.strokeStyle="#241e18";ctx.lineWidth=1;for(let y=109;y<540;y+=22){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(900,y);ctx.stroke()}for(let x=0;x<900;x+=70){ctx.beginPath();ctx.moveTo(x,109);ctx.lineTo(x+25,540);ctx.stroke()}
  drawWindow(24,18,142,58);drawWindow(180,18,142,58);drawWallMonitor(345,16,250,67);drawClock(746,45);
- ctx.fillStyle="#080908";ctx.fillRect(0,88,900,13);ctx.fillStyle="#77736a";ctx.font="bold 7px monospace";ctx.fillText("NIGHT SHIFT · ONE HUMAN · SIX BOTS · FLOOR STATUS: NOMINAL",25,97);
+ ctx.fillStyle="#080908";ctx.fillRect(0,88,900,13);ctx.fillStyle="#77736a";ctx.font="bold 7px monospace";ctx.fillText("GROK BOT COMPANY · ONE HUMAN · SIX BOTS · FLOOR STATUS: NOMINAL",25,97);
  [165,455,740].forEach(x=>{ctx.fillStyle="#d7c28b10";ctx.beginPath();ctx.moveTo(x-13,109);ctx.lineTo(x-82,320);ctx.lineTo(x+82,320);ctx.closePath();ctx.fill();ctx.fillStyle="#6c5c3b";ctx.fillRect(x-17,106,34,5)});
  ctx.fillStyle="#15130f";ctx.fillRect(280,260,350,65);ctx.strokeStyle="#37312a";ctx.strokeRect(280,260,350,65);
  ctx.fillStyle="#746958";ctx.font="bold 8px monospace";ctx.fillText("COMMON HANDOFF FLOOR",290,274);

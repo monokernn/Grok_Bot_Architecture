@@ -1,14 +1,20 @@
-# Grok Bot $Architecture
+# GROK BOT $ARCHITECTURE
+
+## [OPEN THE LIVE $ARCHITECTURE HOLDER EXPERIENCE →](https://archirecture-holders.com)
+
+### THANK YOU TO EVERYONE SUPPORTING $ARCHITECTURE — THIS EXPERIENCE WAS BUILT FOR YOU, SO THE COMMUNITY CAN BECOME A VISIBLE PART OF THE PROJECT.
+
+**[$ARCHITECTURE HOLDER EXPERIENCE SOURCE CODE](https://github.com/monokernn/ARCHITECTURE_HOLDERS)**
 
 **Autonomous multi-agent operations interface for research, production, evidence control, review, and human-approved delivery.**
 
-![Grok Bot $Architecture operations floor](preview.png)
+![Grok Bot $ARCHITECTURE operations floor](preview.png)
 
-Grok Bot $Architecture turns a team of specialist AI agents into a visible operating system. Instead of hiding agent work behind a chat window, it presents the entire workflow as a live operations floor: bots move between workstations, exchange artifacts, report progress, emit telemetry, and stop at an approval boundary before consequential actions.
+Grok Bot $ARCHITECTURE turns a team of specialist AI agents into a visible operating system. Instead of hiding agent work behind a chat window, it presents the entire workflow as a live operations floor: bots move between workstations, exchange artifacts, report progress, emit telemetry, and stop at an approval boundary before consequential actions.
 
 The included mission, **NS-INT-042**, demonstrates a complete competitor-intelligence workflow. At normal speed it runs for approximately five minutes and processes 24 sources, creates a structured evidence pack, performs an independent audit, and prepares a controlled release.
 
-> Grok Bot $Architecture is an independent interface concept and is not an official xAI product.
+> Grok Bot $ARCHITECTURE is an independent interface concept and is not an official xAI product.
 
 ## What the interface provides
 
@@ -58,8 +64,8 @@ Scope → Research → Synthesis → Evidence → Review → Release
 Clone the repository:
 
 ```bash
-git clone https://github.com/monokernn/GrokBotCompany.git
-cd GrokBotCompany
+git clone https://github.com/monokernn/Grok_Bot_Architecture.git
+cd Grok_Bot_Architecture
 ```
 
 The application is completely static. You can open `index.html` directly, or serve the directory locally:
@@ -203,7 +209,7 @@ Consequential operations should always be represented as approval requests and m
 ├── grokbot-adapter.js  Mock transport, commands, heartbeat, persistence
 ├── mission-ledger.js   Hash chain, artifact versions, lineage, policies
 ├── styles.css          Base layout and component styles
-├── theme-muted.css     Grok Bot $Architecture theme and responsive rules
+├── theme-muted.css     Grok Bot $ARCHITECTURE theme and responsive rules
 ├── preview.png         Current interface preview
 └── README.md           Product and operating documentation
 ```

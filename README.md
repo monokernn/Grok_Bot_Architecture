@@ -22,6 +22,7 @@ The included mission, **NS-INT-042**, demonstrates a complete competitor-intelli
 - Real-time task labels such as `reading pricing pages`, `sourced 6 links`, and `cross-checking 24 citations`.
 - Animated wall telemetry, workstation displays, city lights, and a real-time analog clock.
 - A mission timeline with progress, ETA, cost, artifacts, and operational stages.
+- Persistent per-agent memory with versioned local storage, reload recovery, independent recall, and JSON export.
 - A realistic event feed containing source discovery, handoffs, warnings, audit results, and system events.
 - A cryptographic Mission Ledger with SHA-256 hashes, artifact versions, and parent lineage.
 - A persistent visual release rail: `SOURCES → PACK → BRIEF → AUDIT → RELEASE`.
@@ -99,16 +100,19 @@ Then visit `http://localhost:8080`.
 | Control | Action |
 | --- | --- |
 | `Start mission` | Starts the mission timeline |
+| `Agent Memory` | Opens persistent context stored independently for all six agents |
 | Pause button | Pauses or resumes execution |
 | Reset button | Returns agents and mission state to the beginning |
 | `1x–10x` | Changes system speed |
 | `Space` | Starts, pauses, or resumes |
 | `R` | Resets the mission |
+| `M` | Opens or closes Agent Memory |
 | Agent card or bot | Opens the current task and location |
 
 ## Interface map
 
 - **Operations Floor** — spatial view of agents, desks, shared equipment, and handoffs.
+- **Agent Memory** - per-agent recall view with storage health, write timestamps, mission phases, and export.
 - **Crew Manifest** — current state and assignment of every bot.
 - **Live Feed** — timestamped operational telemetry.
 - **Active Mission** — objective, stage, progress, ETA, and risk state.
@@ -168,6 +172,25 @@ index.html?autoplay=ledger
 
 This preloads a complete artifact lineage, opens the inspector, draws handoff packets across the room, and stops on the visible `APPROVAL REQUIRED` policy state.
 
+### Persistent Agent Memory
+
+`agent-memory.js` provides a versioned memory store for the six specialist agents:
+
+- memories are namespaced by agent, mission, run, and workflow phase;
+- every record stores its title, summary, tone, mission time, and creation time;
+- the store keeps a bounded 240-record history instead of growing without limit;
+- records persist in `localStorage` and are restored after a page reload;
+- reset starts a fresh mission run without erasing earlier agent context;
+- the complete memory snapshot can be exported as JSON.
+
+The mission event loop writes meaningful agent events into memory automatically. Open **Agent Memory** to recall Helm, Scout, Forge, Archive, Sentinel, or Relay independently.
+
+For an instant technical showcase, open:
+
+```text
+index.html?autoplay=memory
+```
+
 ### Live Agent Comms
 
 Key mission handoffs now publish a visible inter-agent message:
@@ -206,6 +229,7 @@ Consequential operations should always be represented as approval requests and m
 ├── app.js              Mission engine, routing, agents, canvas renderer
 ├── grokbot-adapter.js  Mock transport, commands, heartbeat, persistence
 ├── mission-ledger.js   Hash chain, artifact versions, lineage, policies
+|-- agent-memory.js     Versioned per-agent local memory, recall, and export
 ├── styles.css          Base layout and component styles
 ├── theme-muted.css     Grok Bot $ARCHITECTURE theme and responsive rules
 ├── preview.png         Current interface preview

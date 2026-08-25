@@ -41,6 +41,7 @@
           <div><span>DECK 07 · AUTONOMY STATION</span><h2>Operations Floor</h2></div>
           <div class="controls">
             <button id="startBtn" class="primary">▶ Start mission</button>
+            <button id="memoryBtn" class="memory-trigger" type="button"><i></i><span>Agent Memory</span><b id="memoryBadge">00</b></button>
             <button id="pauseBtn">Ⅱ</button><button id="resetBtn">↺</button>
             <select id="speed" aria-label="Mission speed"><option value="1">1x</option><option value="2">2x</option><option value="4">4x</option><option value="10">10x</option></select>
           </div>
@@ -69,6 +70,28 @@
             <span id="ledgerToastEyebrow">ARTIFACT SEALED</span>
             <b id="ledgerToastTitle">INTELLIGENCE BRIEF · v1</b>
             <em id="ledgerToastMeta">SHA-256 VERIFIED · FORGE → VAULT</em>
+          </div>
+          <div id="memoryBackdrop" class="memory-backdrop" hidden></div>
+          <aside id="memoryDrawer" class="memory-drawer" hidden aria-label="Persistent agent memory">
+            <header>
+              <div><span>PERSISTENT CONTEXT LAYER</span><h2>Agent Memory</h2></div>
+              <div class="memory-head-actions"><b id="memoryStatus"><i></i> LOCAL VAULT ONLINE</b><button id="closeMemory" type="button" aria-label="Close agent memory">X</button></div>
+            </header>
+            <div class="memory-summary">
+              <span>STORED MEMORIES<b id="memoryTotal">00</b></span>
+              <span>AGENTS INDEXED<b id="memoryAgentsCount">0 / 6</b></span>
+              <span>LAST WRITE<b id="memoryLastWrite">NO WRITES</b></span>
+            </div>
+            <nav id="memoryAgents" class="memory-agents" aria-label="Select agent memory"></nav>
+            <div class="memory-log-head"><span id="memorySelectedLabel">HELM MEMORY</span><b id="memorySelectedCount">0 RECORDS</b></div>
+            <div id="memoryEntries" class="memory-entries"></div>
+            <footer>
+              <span>VERSIONED LOCAL STORAGE / SURVIVES PAGE RELOADS</span>
+              <button id="exportMemory" type="button">EXPORT JSON</button>
+            </footer>
+          </aside>
+          <div id="memoryRestoreToast" class="memory-restore-toast" hidden>
+            <i></i><div><span>PERSISTENT CONTEXT RESTORED</span><b id="memoryRestoreCount">0 memories loaded across 0 agents</b></div>
           </div>
           <div id="artifactFlow" class="artifact-flow" aria-label="Artifact release pipeline">
             <span data-flow="source"><i></i><small>SOURCES</small><b id="flowSource">WAITING</b></span>
@@ -115,6 +138,7 @@
   </form></dialog>
   <script src="grokbot-adapter.js"></script>
   <script src="mission-ledger.js"></script>
+  <script src="agent-memory.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

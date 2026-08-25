@@ -5,6 +5,8 @@ const C={helm:"#ef5a52",forge:"#eda63a",sentinel:"#8d74d6",scout:"#a6cf58",archi
 const bridge=window.grokBot||null;
 const ledger=window.missionLedger||null,artifactPackets=[],commSignals=[];
 let selectedArtifactId=null,ledgerToastTimer=null,commSequence=0;
+const memory=window.agentMemory||null;
+let memoryAgentId="helm",memoryToastTimer=null,memoryRunId="run_"+Date.now().toString(36),memoryRunStarted=false;
 const zones=[
  {id:"bridge",name:"COMMAND DESK",x:65,y:115,w:200,h:125,color:C.helm,type:"bridge"},
  {id:"build",name:"BUILD DESK",x:350,y:115,w:210,h:125,color:C.forge,type:"build"},
@@ -80,6 +82,7 @@ function event(actor,title,message,tone){
  el.innerHTML='<i></i><div><b>'+actor+'</b><time>'+time+'</time></div><p><strong>'+title+'.</strong> '+message+'</p>';
  $("#eventFeed").prepend(el);state.count++;$("#eventCount").textContent=String(state.count).padStart(2,"0")+" EVENTS";
  if(bridge)bridge.recordEvent({missionId:"NS-INT-042",actor,title,message,tone});
+ captureAgentMemory(actor,title,message,tone);
 }
 function resetComms(){
  commSignals.length=0;commSequence=0;const items=$("#commItems");if(items)items.innerHTML='<article class="comm-empty"><i></i><p>Encrypted handoff channels standing by.</p></article>';if($("#commBus"))$("#commBus").textContent="BUS READY";
@@ -93,6 +96,60 @@ function ledgerCall(method,...args){if(!ledger||typeof ledger[method]!=="functio
 function sealArtifact(spec){return ledgerCall("createArtifact",spec)}
 function artifactColor(artifact){return C[artifact.createdBy]||C.cyan}
 function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[char]))}
+function memoryPhase(){
+ if(state.elapsed>=281000)return"release";
+ if(state.elapsed>=215000)return"review";
+ if(state.elapsed>=162000)return"evidence";
+ if(state.elapsed>=84000)return"synthesis";
+ if(state.elapsed>=28000)return"research";
+ return"scope";
+}
+function captureAgentMemory(actor,title,message,tone){
+ if(!memory)return;const id=String(actor).toLowerCase();if(!initial.some(agent=>agent.id===id))return;
+ memory.remember({agentId:id,missionId:"NS-INT-042",runId:memoryRunId,phase:memoryPhase(),title,summary:message,tone,elapsedMs:state.elapsed});
+}
+function memoryTime(value){
+ if(!value)return"NO WRITES";const date=new Date(value);if(Number.isNaN(date.getTime()))return"UNKNOWN";
+ return new Intl.DateTimeFormat("en-GB",{hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false}).format(date);
+}
+function renderMemory(){
+ if(!memory)return;const stats=memory.stats(),selected=initial.find(agent=>agent.id===memoryAgentId)||initial[0],entries=memory.recall(selected.id,40),status=$("#memoryStatus");
+ $("#memoryBadge").textContent=stats.total>99?"99+":String(stats.total).padStart(2,"0");
+ $("#memoryTotal").textContent=String(stats.total).padStart(2,"0");
+ $("#memoryAgentsCount").textContent=stats.activeAgents+" / 6";
+ $("#memoryLastWrite").textContent=memoryTime(stats.lastWrite);
+ status.classList.toggle("offline",!stats.persistent);status.innerHTML="<i></i> "+(stats.persistent?"LOCAL VAULT ONLINE":"VOLATILE MEMORY");
+ $("#memoryAgents").innerHTML=initial.map(agent=>'<button type="button" class="memory-agent '+(agent.id===selected.id?"selected":"")+'" data-memory-agent="'+agent.id+'" style="--memory:'+agent.color+'"><b>'+escapeHtml(agent.name.toUpperCase())+'</b><span>'+memory.count(agent.id)+' RECORDS</span></button>').join("");
+ document.querySelectorAll(".memory-agent").forEach(button=>button.onclick=()=>{memoryAgentId=button.dataset.memoryAgent;renderMemory()});
+ $("#memorySelectedLabel").textContent=selected.name.toUpperCase()+" MEMORY";
+ $("#memorySelectedCount").textContent=entries.length+" RECORD"+(entries.length===1?"":"S");
+ if(!entries.length){
+  $("#memoryEntries").innerHTML='<div class="memory-empty"><i></i><b>NO STORED CONTEXT</b><p>This agent will write decisions, findings, and completed work here during the mission.</p></div>';
+  return;
+ }
+ $("#memoryEntries").innerHTML=entries.map(entry=>'<article class="memory-entry" style="--memory:'+selected.color+'"><header><b>'+escapeHtml(entry.title)+'</b><time>'+escapeHtml(memoryTime(entry.createdAt))+'</time></header><p>'+escapeHtml(entry.summary)+'</p><footer><span>'+escapeHtml(entry.phase)+'</span><span>'+escapeHtml(entry.missionId)+' / T+'+escapeHtml(formatDuration(entry.elapsedMs))+'</span></footer></article>').join("");
+}
+function openMemory(){
+ if(!memory)return;const selected=initial.find(agent=>agent.id===state.selected);if(selected)memoryAgentId=selected.id;
+ $("#ledgerDrawer").hidden=true;$("#ledgerMini").hidden=false;$("#memoryBackdrop").hidden=false;$("#memoryDrawer").hidden=false;renderMemory();
+}
+function closeMemory(){$("#memoryBackdrop").hidden=true;$("#memoryDrawer").hidden=true}
+function exportMemory(){
+ if(!memory)return;const blob=new Blob([JSON.stringify(memory.snapshot(),null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),link=document.createElement("a");
+ link.href=url;link.download="grok-bot-agent-memory-"+new Date().toISOString().slice(0,10)+".json";link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function showMemoryRestore(){
+ if(!memory)return;const stats=memory.stats();if(!stats.total)return;clearTimeout(memoryToastTimer);
+ $("#memoryRestoreCount").textContent=stats.total+" memories loaded across "+stats.activeAgents+" agents";
+ $("#memoryRestoreToast").hidden=false;memoryToastTimer=setTimeout(()=>$("#memoryRestoreToast").hidden=true,4400);
+}
+function bindMemory(){
+ $("#memoryBtn").onclick=openMemory;$("#closeMemory").onclick=closeMemory;$("#memoryBackdrop").onclick=closeMemory;$("#exportMemory").onclick=exportMemory;
+ document.addEventListener("keydown",event=>{if(event.key.toLowerCase()==="m"&&!/INPUT|TEXTAREA|SELECT/.test(event.target.tagName)){$("#memoryDrawer").hidden?openMemory():closeMemory()}if(event.key==="Escape"&&!$("#memoryDrawer").hidden)closeMemory()});
+ if(!memory){$("#memoryStatus").classList.add("offline");$("#memoryStatus").innerHTML="<i></i> MEMORY UNAVAILABLE";return}
+ memory.addEventListener("change",event=>{renderMemory();if(event.detail.type==="write"){const button=$("#memoryBtn");button.classList.remove("writing");void button.offsetWidth;button.classList.add("writing");setTimeout(()=>button.classList.remove("writing"),1200)}});
+ memory.addEventListener("error",()=>renderMemory());renderMemory();setTimeout(showMemoryRestore,550);
+}
 function launchArtifactPacket(artifact){
  const source=agents.find(a=>a.id===artifact.createdBy)||agents[0],targets={source_set:"forge",evidence:"forge",research_pack:"forge",claim_map:"archive",brief:"archive",evidence_bundle:"archive",evidence_index:"sentinel",audit_receipt:"relay"},target=agents.find(a=>a.id===targets[artifact.type])||agents.find(a=>a.id==="archive");
  artifactPackets.push({artifactId:artifact.artifactId,label:artifact.label||artifact.baseId,color:artifactColor(artifact),x1:source.x,y1:source.y-18,x2:target.x,y2:target.y-18,born:performance.now(),duration:4300});
@@ -170,6 +227,7 @@ function resolve(ok){
 function start(){
  if(state.complete||state.rejected||state.cursor>=timeline.length)reset(false);if(state.approval)return;
  if(state.elapsed===0){artifactPackets.length=0;selectedArtifactId=null;resetComms();ledgerCall("startMission","NS-INT-042")}
+ if(state.elapsed===0&&!memoryRunStarted){memoryRunId="run_"+Date.now().toString(36);memoryRunStarted=true;const recalled=memory?memory.count():0;if(recalled)event("memory","Prior agent context loaded",recalled+" persistent memories are available to the specialist team.","green")}
  state.running=true;state.paused=false;$("#startBtn").textContent="● Mission running";event("system","System started","Grok Bot $Architecture event loop is active.","cyan");
  if(bridge)bridge.startMission({id:"NS-INT-042",objective:"Build the 2026 competitor intelligence brief",agents:agents.map(a=>a.id)}).then(ack=>event("grok","Command acknowledged","mission.start accepted as #"+ack.sequence+" in "+ack.latency+"ms.","green")).catch(()=>event("grok","Transport warning","Mission continues locally; command acknowledgement was not received.","amber"));
 }
@@ -179,6 +237,7 @@ function pause(){
 }
 function reset(announce=true){
  state.running=false;state.paused=false;state.approval=false;state.complete=false;state.rejected=false;state.elapsed=0;state.cursor=0;state.artifacts=0;state.spend=.42;agents=initial.map(a=>({...a}));resetComms();
+ memoryRunStarted=false;
  $("#approvalIdle").hidden=false;$("#approvalRequest").hidden=true;$("#airlockMetric").textContent="CLEAR";$("#airlockMetric").style.color="";$("#spendMetric").textContent="$0.42";$("#riskBadge").textContent="LOW RISK";$("#riskBadge").style.color="";$("#startBtn").textContent="▶ Start mission";$("#pauseBtn").textContent="Ⅱ";
  stage(null,0,"Build the 2026 competitor intelligence brief","Research 24 sources, map claims, build an evidence pack, audit, and prepare release.");document.querySelectorAll("#stages span").forEach(n=>n.classList.remove("active","done"));renderRoster();select("helm");if(announce)event("system","Mission reset","All agents returned to their stations; the five-minute clock is ready.","amber");
  if(bridge&&announce)bridge.resetMission();
@@ -312,11 +371,13 @@ $("#startBtn").onclick=start;$("#pauseBtn").onclick=pause;$("#resetBtn").onclick
 window.onkeydown=e=>{if(e.code==="Space"&&e.target.tagName!=="BUTTON"){e.preventDefault();state.running?pause():start()}if(e.key.toLowerCase()==="r")reset()};
 bindLedger();
 bindTransport();
+bindMemory();
 renderRoster();resize();select("helm");stage(null,0,"Build the 2026 competitor intelligence brief","Research 24 sources, map claims, build an evidence pack, audit, and prepare release.");document.querySelectorAll("#stages span").forEach(n=>n.classList.remove("active","done"));
 event("system","Station online","Room telemetry, pathing, and the five-minute mission clock are live.","green");event("vault","Evidence store mounted","Workspace is ready for source-linked artifacts.","cyan");event("airlock","Safety boundary armed","Publication requires one operator decision.","amber");
 clock();setInterval(clock,1000);requestAnimationFrame(tick);
 const autoplay=new URLSearchParams(location.search).get("autoplay");
-if(autoplay==="ledger")setTimeout(ledgerShowcase,250);
+if(autoplay==="memory")setTimeout(()=>{reset(false);const target=215000;while(state.cursor<timeline.length&&timeline[state.cursor].at<=target){const item=timeline[state.cursor++];state.elapsed=item.at;item.run()}state.running=false;state.paused=true;stage("review",71,"Independent audit in progress","Sentinel is testing every material claim against the evidence ledger.");state.selected="forge";memoryAgentId="forge";openMemory()},250);
+else if(autoplay==="ledger")setTimeout(ledgerShowcase,250);
 else if(autoplay==="comms")setTimeout(()=>{state.elapsed=162000;agent("scout","complete","24-source pack verified","skill");agent("forge","delegating","routing evidence bundle","build");agent("archive","working","binding artifact lineage","vault");agent("sentinel","reviewing","opening audit channel","audit");sendComm("scout","forge","research.pack · 24 sources / 17 verified claims","handoff",16000);sendComm("forge","archive","evidence.bundle · 18 artifacts + rollback metadata","handoff",16000);sendComm("archive","sentinel","ledger.index · lineage verified / audit ready","audit",16000);event("system","Agent message bus active","Three encrypted work packets are moving through the operation.","green");stage("evidence",54,"Live inter-agent routing","Research, evidence, and lineage packets are moving between specialist agents.")},250);
 else if(autoplay==="handoff")setTimeout(()=>{state.elapsed=84000;agent("scout","delegating","handing off 24 sources","core");agent("forge","working","receiving source pack","core");const scout=agents.find(x=>x.id==="scout"),forge=agents.find(x=>x.id==="forge");Object.assign(scout,{x:510,y:300,tx:510,ty:300,path:[]});Object.assign(forge,{x:400,y:292,tx:400,ty:292,path:[]});event("scout","Live handoff","Scout and Forge are transferring the verified source pack.","amber");stage("synthesis",28,"Live evidence handoff","Two agents are exchanging 24 verified sources at the common table.")},250);
 else if(autoplay==="approval")setTimeout(()=>{state.elapsed=290000;event("relay","Human decision requested","The audited brief is paused at the release boundary.","amber");agent("sentinel","complete","audit passed: 12/12","audit");agent("relay","waiting approval","awaiting final yes","airlock");agent("helm","waiting approval","decision packet ready","lounge");stage("release",97,"Final approval required","The complete intelligence brief is waiting for one human decision.");requestApproval()},250);

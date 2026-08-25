@@ -17,13 +17,33 @@
         <b id=connectionBadge class="live connecting" data-mode=mock><i></i><span id=connectionText>LINKING</span></b>
       </div>
       <a class="creator-tag" href="https://x.com/monokern" target="_blank" rel="noreferrer"><small>CREATED BY</small><strong>@MONOKERN</strong></a>
-      <div class=metrics>
-        <div><span>CREW</span><b>6 / 6</b></div>
-        <div><span>MISSIONS</span><b>01</b></div>
-        <div><span>AIRLOCK</span><b id=airlockMetric>CLEAR</b></div>
-        <div><span>SPEND</span><b id=spendMetric>$0.42</b></div>
+      <div id="accountHub" class="account-hub">
+        <button id="gmailSignIn" class="gmail-signin" type="button"><i>G</i><span><small>CONTINUE WITH</small><b>Gmail</b></span></button>
+        <div id="profileChip" class="profile-chip" hidden>
+          <button id="walletToggle" class="wallet-toggle" type="button"><span>WALLET</span><b id="walletHeaderBalance">0 $ARCH</b></button>
+          <button id="creditsToggle" class="credits-toggle" type="button"><span>AGENT CREDITS</span><b id="headerCreditBalance">0</b></button>
+          <img src="assets/monokern-avatar-square.png" alt="monokern fingerprint profile avatar">
+          <div><small>ACTIVE PROFILE</small><b>monokern</b><em>monokern@gmail.com</em></div>
+        </div>
+        <aside id="walletPanel" class="wallet-panel" hidden>
+          <header><div><span>GMAIL CUSTODIAL WALLET</span><h2>monokern.wallet</h2></div><button id="closeWallet" type="button" aria-label="Close wallet">X</button></header>
+          <div class="wallet-warning"><i></i><span>PROTOTYPE MODE</span><b>DO NOT SEND REAL FUNDS</b></div>
+          <div class="wallet-balances">
+            <article><span>SOL BALANCE</span><b id="solBalance">0.0250</b><small>SOL</small></article>
+            <article><span>TOKEN BALANCE</span><b id="architectureBalance">0</b><small>$ARCHITECTURE</small></article>
+          </div>
+          <div class="wallet-address"><span>DEPOSIT ADDRESS / MONOKERN@GMAIL</span><code id="walletAddress">GENERATING...</code></div>
+          <div class="wallet-actions"><button id="copyWalletAddress" type="button">COPY ADDRESS</button><button id="withdrawToggle" type="button">WITHDRAW</button></div>
+          <div id="depositWatch" class="deposit-watch" hidden><i></i><div><span>WATCHING SOLANA</span><b id="depositCountdown">DEPOSIT IN 5S</b></div></div>
+          <div class="credit-balance"><div><span>AGENT COMPUTE</span><b id="agentCreditBalance">0 CREDITS</b></div><button id="buyCredits" type="button">BUY CREDITS</button></div>
+          <form id="withdrawForm" class="withdraw-form" hidden>
+            <div><select id="withdrawAsset" aria-label="Withdraw asset"><option value="architecture">$ARCHITECTURE</option><option value="sol">SOL</option></select><input id="withdrawAmount" type="number" min="0" step="any" placeholder="Amount"></div>
+            <input id="withdrawAddress" type="text" placeholder="Destination address">
+            <button id="confirmWithdraw" type="submit">PREVIEW WITHDRAWAL</button><p id="withdrawMessage">Prototype only. No transaction will be submitted.</p>
+          </form>
+          <footer><span id="walletSession">SESSION NOT INITIALIZED</span><button id="resetWalletDemo" type="button">RESET DEMO</button></footer>
+        </aside>
       </div>
-      <div class=clock><span>NIGHT WATCH</span><b id=clock>00:00:00</b><small>EUROPE / MOSCOW</small></div>
     </header>
     <main class="grid">
       <aside class="panel roster">
@@ -39,6 +59,12 @@
       <section class="panel station">
         <div class="station-head">
           <div><span>DECK 07 · AUTONOMY STATION</span><h2>Operations Floor</h2></div>
+          <div class="floor-metrics" aria-label="Mission telemetry">
+            <span><small>CREW</small><b>6 / 6</b></span>
+            <span><small>MISSION</small><b>01 ACTIVE</b></span>
+            <span><small>AIRLOCK</small><b id="airlockMetric">CLEAR</b></span>
+            <span><small>CREDITS USED</small><b id="creditsUsedMetric">0</b></span>
+          </div>
           <div class="controls">
             <button id="startBtn" class="primary">▶ Start mission</button>
             <button id="memoryBtn" class="memory-trigger" type="button"><i></i><span>Agent Memory</span><b id="memoryBadge">00</b></button>
@@ -131,6 +157,32 @@
       </section>
     </main>
   </div>
+  <div id="creditBackdrop" class="credit-backdrop" hidden></div>
+  <section id="creditCheckout" class="credit-checkout" hidden aria-label="Buy agent credits">
+    <header><div><span>$ARCHITECTURE PAYMENT PROTOTYPE</span><h2>Agent Credit Settlement</h2></div><div><b>85 / 10 / 5</b><button id="closeCreditCheckout" type="button">X</button></div></header>
+    <div class="checkout-account"><img src="assets/monokern-avatar-square.png" alt="monokern fingerprint profile avatar"><div><span>PAYING FROM</span><b>monokern.wallet</b></div><strong id="checkoutWalletBalance">0 $ARCH</strong></div>
+    <div class="checkout-section-title"><span>SELECT CREDIT PACKAGE</span><b>1 CREDIT = 100 $ARCH</b></div>
+    <div id="creditPackages" class="credit-packages">
+      <button type="button" data-token-amount="100000" data-credit-amount="1000"><span>STARTER RUN</span><b>1,000 CREDITS</b><em>100,000 $ARCH</em></button>
+      <button type="button" class="selected" data-token-amount="500000" data-credit-amount="5000"><span>OPERATIONS</span><b>5,000 CREDITS</b><em>500,000 $ARCH</em></button>
+      <button type="button" data-token-amount="1000000" data-credit-amount="10000"><span>FULL AUTONOMY</span><b>10,000 CREDITS</b><em>1,000,000 $ARCH</em></button>
+    </div>
+    <div class="settlement-map">
+      <article class="compute"><div><span>COMPUTE & OPERATIONS</span><b>85%</b></div><i><em style="width:85%"></em></i><strong id="computeAllocation">425,000 $ARCH</strong></article>
+      <article class="burn"><div><span>PERMANENT BURN</span><b>10%</b></div><i><em style="width:10%"></em></i><strong id="burnAllocation">50,000 $ARCH</strong></article>
+      <article class="bounty"><div><span>COMMUNITY BOUNTY</span><b>5%</b></div><i><em style="width:5%"></em></i><strong id="bountyAllocation">25,000 $ARCH</strong></article>
+    </div>
+    <div id="settlementProgress" class="settlement-progress" hidden>
+      <span data-settlement-step="authorize"><i></i>PAYMENT AUTHORIZATION</span>
+      <span data-settlement-step="compute"><i></i>COMPUTE RESERVE</span>
+      <span data-settlement-step="burn"><i></i>BURN RECEIPT</span>
+      <span data-settlement-step="bounty"><i></i>BOUNTY ALLOCATION</span>
+      <span data-settlement-step="credits"><i></i>CREDITS ISSUED</span>
+    </div>
+    <div id="settlementReceipt" class="settlement-receipt" hidden><span>SETTLEMENT COMPLETE</span><b id="settlementReceiptTitle">5,000 AGENT CREDITS ISSUED</b><code id="settlementReceiptId">DEMO_RECEIPT_PENDING</code></div>
+    <footer><div><span>AVAILABLE AFTER PAYMENT</span><b id="balanceAfterPurchase">1,500,000 $ARCH</b></div><button id="confirmCreditPurchase" type="button">PAY 500,000 $ARCH</button></footer>
+  </section>
+  <div id="tokenToast" class="token-toast" hidden><i></i><div><span id="tokenToastTitle">WALLET UPDATED</span><b id="tokenToastMessage">Balance synchronized.</b></div></div>
   <dialog id="inspectDialog"><form method="dialog">
     <header><h2>Action inspection</h2><button value="close">×</button></header>
     <section><p><b>Target:</b> Executive intelligence workspace</p><p><b>Payload:</b> 12-page brief, claim map, citations, and source ledger.</p><p><b>Rollback:</b> Draft publication can be removed.</p><p><b>Evidence:</b> 24 sources, 18 indexed artifacts, and 12 passed checks.</p></section>
@@ -139,6 +191,7 @@
   <script src="grokbot-adapter.js"></script>
   <script src="mission-ledger.js"></script>
   <script src="agent-memory.js"></script>
+  <script src="token-payments.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

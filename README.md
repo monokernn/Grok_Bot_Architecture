@@ -8,11 +8,47 @@
 
 ![Grok Bot $ARCHITECTURE operations floor](preview.png)
 
+## $ARCHITECTURE Token Utility
+
+$ARCHITECTURE is designed to power agent work inside the system. Users convert the token into **Agent Credits** that are consumed by research, writing, auditing, browser actions, tool calls, and other autonomous workflows.
+
+- **85% Agent Operations** - converted into credits that fund the models, tools, browser sessions, and cloud runtime used to complete agent work.
+- **10% Permanent Burn** - allocated to a verifiable burn that permanently removes tokens from circulation.
+- **5% Community Bounty Pool** - rewards useful contributions such as bug reports, agent skills, integrations, workflows, and research.
+
+
 Grok Bot $ARCHITECTURE turns a team of specialist AI agents into a visible operating system. Instead of hiding agent work behind a chat window, it presents the entire workflow as a live operations floor: bots move between workstations, exchange artifacts, report progress, emit telemetry, and stop at an approval boundary before consequential actions.
 
 The included mission, **NS-INT-042**, demonstrates a complete competitor-intelligence workflow. At normal speed it runs for approximately five minutes and processes 24 sources, creates a structured evidence pack, performs an independent audit, and prepares a controlled release.
 
-> Grok Bot $ARCHITECTURE is an independent interface concept and is not an official xAI product.
+
+
+## Token payments
+
+The header includes the complete payment flow for funding and using the agent operation with **$ARCHITECTURE**:
+
+```text
+Gmail profile -> dedicated embedded wallet -> $ARCHITECTURE deposit -> Agent Credits -> agent execution
+```
+
+1. Select **Continue with Gmail** to initialize the `monokern` profile.
+2. Open **Wallet** to view the dedicated address, SOL balance, $ARCHITECTURE balance, and Agent Credits.
+3. Select **Copy address** to start the deposit flow and populate the wallet balance.
+4. Select **Buy credits**, choose a package, and inspect the settlement before confirming.
+5. The payment engine visualizes the configured allocation:
+   - **85% Agent Operations** - converted into credits used for models, tools, browser sessions, storage, and runtime.
+   - **10% Permanent Burn** - allocated to a verifiable burn that removes tokens from circulation.
+   - **5% Community Bounty Pool** - reserved for contributors, integrations, research, and community tasks.
+
+The live credit balance is also exposed as a dedicated **Agent Credits** control in the header. Selecting it opens the same settlement panel used by **Buy credits** inside the Wallet, so funding remains accessible from both surfaces.
+
+Agent credit usage is metered continuously while agents perform work. The final cost depends on the task, runtime, models, tools, and browser activity involved. Pausing stops runtime usage, while the dashboard keeps the consumed-credit total visible throughout the operation.
+
+> **Current development status:** Live Google OAuth, private keys, Solana transfers, withdrawals, and token burns are not connected in this repository. Balances are stored locally. Never send real funds to the displayed address.
+
+The local payment state persists its Gmail session, balances, deposit state, credits, and settlement receipts in browser `localStorage`, so the flow survives a reload. Withdrawal remains preview-only until the on-chain service is connected.
+
+A production implementation would replace this local state with Google OIDC, an embedded custodial or MPC wallet, HSM/KMS-backed key custody, indexed on-chain deposit verification, an auditable credit ledger, transaction receipts, rate limits, 2FA, withdrawal policy, and independently verifiable burn and bounty addresses.
 
 ## What the interface provides
 
@@ -87,7 +123,7 @@ Then visit `http://localhost:8080`.
 
 1. Open the interface and confirm that all six agents show as online.
 2. Select **Start mission** to begin NS-INT-042.
-3. Watch the progress bar, remaining time, spend, agent statuses, and Live Feed.
+3. Watch the progress bar, remaining time, credits used, agent statuses, and Live Feed.
 4. Click any bot to inspect its current task and location.
 5. Use the speed selector to run the workflow at `1x`, `2x`, `4x`, or `10x`.
 6. When Relay reaches the Approval Airlock, select:
@@ -100,6 +136,8 @@ Then visit `http://localhost:8080`.
 | Control | Action |
 | --- | --- |
 | `Start mission` | Starts the mission timeline |
+| `Wallet` | Opens the embedded wallet, balances, address, withdrawal preview, and credit purchase entry point |
+| `Agent Credits` | Shows the live credit balance and opens the credit settlement panel |
 | `Agent Memory` | Opens persistent context stored independently for all six agents |
 | Pause button | Pauses or resumes execution |
 | Reset button | Returns agents and mission state to the beginning |
@@ -147,7 +185,7 @@ The browser currently loads `grokbot-adapter.js` before the interface engine. It
 - approval request and resolution commands;
 - a 40-event local telemetry buffer.
 
-The header deliberately displays `SIM` next to `GROK LINK`. Replace `window.grokBot` with an adapter exposing the same methods to connect a real service without changing the canvas renderer or mission controls.
+Replace `window.grokBot` with an adapter exposing the same methods to connect a real service without changing the canvas renderer or mission controls.
 
 ### Mission Ledger and artifact lineage
 
@@ -230,6 +268,8 @@ Consequential operations should always be represented as approval requests and m
 ├── grokbot-adapter.js  Mock transport, commands, heartbeat, persistence
 ├── mission-ledger.js   Hash chain, artifact versions, lineage, policies
 |-- agent-memory.js     Versioned per-agent local memory, recall, and export
+|-- token-payments.js   Gmail wallet, funding watcher, credits, and 85/10/5 settlement
+|-- assets/             Profile artwork used by the wallet and payment interface
 ├── styles.css          Base layout and component styles
 ├── theme-muted.css     Grok Bot $ARCHITECTURE theme and responsive rules
 ├── preview.png         Current interface preview

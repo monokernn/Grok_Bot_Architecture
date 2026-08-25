@@ -7,6 +7,7 @@ const ledger=window.missionLedger||null,artifactPackets=[],commSignals=[];
 let selectedArtifactId=null,ledgerToastTimer=null,commSequence=0;
 const memory=window.agentMemory||null;
 let memoryAgentId="helm",memoryToastTimer=null,memoryRunId="run_"+Date.now().toString(36),memoryRunStarted=false;
+const MISSION_CREDIT_MIN=900,MISSION_CREDIT_MAX=1100,MISSION_BILLING_DURATION=290000;let missionCreditTarget=0,missionBillingActive=false;
 const zones=[
  {id:"bridge",name:"COMMAND DESK",x:65,y:115,w:200,h:125,color:C.helm,type:"bridge"},
  {id:"build",name:"BUILD DESK",x:350,y:115,w:210,h:125,color:C.forge,type:"build"},
@@ -25,7 +26,7 @@ const initial=[
  {id:"relay",name:"Relay",letter:"R",role:"External Operations",color:C.relay,state:"idle",task:"Airlock standing by",zone:"airlock",x:740,y:430,tx:740,ty:430}
 ];
 let agents=initial.map(a=>({...a}));
-const state={running:false,paused:false,approval:false,complete:false,rejected:false,elapsed:0,duration:300000,last:performance.now(),cursor:0,speed:1,count:0,spend:.42,artifacts:0,particles:[],selected:"helm",ambientAt:performance.now()+1800};
+const state={running:false,paused:false,approval:false,complete:false,rejected:false,elapsed:0,duration:300000,last:performance.now(),cursor:0,speed:1,count:0,creditsUsed:0,artifacts:0,particles:[],selected:"helm",ambientAt:performance.now()+1800};
 const stages=["scope","research","synthesis","evidence","review","release"];
 const timeline=[
  {at:1000,run(){event("helm","Mission opened","NS-INT-042 received: produce a decision-ready 2026 competitor brief.","cyan");agent("helm","working","breaking down request","bridge");stage("scope",1,"Scoping the intelligence mission","Helm is defining questions, owners, evidence rules, and the release boundary.")}},
@@ -221,11 +222,29 @@ function resolve(ok){
  if(!state.approval)return;state.approval=false;$("#approvalIdle").hidden=false;$("#approvalRequest").hidden=true;$("#airlockMetric").textContent="CLEAR";$("#airlockMetric").style.color="";
  if(bridge)bridge.resolveApproval(ok?"approved":"rejected");
  ledgerCall("recordApproval",ok?"approved":"rejected");
- if(ok){event("operator","Action approved","The intelligence brief passed through the Approval Airlock.","green");agent("relay","complete","release approved","airlock");agent("helm","complete","mission completed","bridge");stage("release",100,"Mission complete","Six agents produced an audited brief with a traceable evidence record.");$("#riskBadge").textContent="COMPLETED";$("#riskBadge").style.color=C.green;state.complete=true;state.spend=4.07;$("#spendMetric").textContent="$4.07";setTimeout(()=>event("helm","Mission completed","NS-INT-042 closed with a clean evidence record.","green"),500);burst(points.bridge.x,points.bridge.y,C.green,24)}
+ if(ok){event("operator","Action approved","The intelligence brief passed through the Approval Airlock.","green");agent("relay","complete","release approved","airlock");agent("helm","complete","mission completed","bridge");stage("release",100,"Mission complete","Six agents produced an audited brief with a traceable evidence record.");$("#riskBadge").textContent="COMPLETED";$("#riskBadge").style.color=C.green;state.complete=true;setTimeout(()=>event("helm","Mission completed","NS-INT-042 closed with a clean evidence record.","green"),500);burst(points.bridge.x,points.bridge.y,C.green,24)}
  else{state.rejected=true;event("operator","Action rejected","Publication blocked; all artifacts remain reversible in the Vault.","red");agent("relay","idle","release cancelled","airlock");agent("helm","working","revising release plan","bridge");agent("forge","working","preparing private revision","build");stage("synthesis",48,"Returned for revision","The external action was rejected; the evidence pack remains intact.");$("#riskBadge").textContent="REVISION";$("#riskBadge").style.color=C.amber}
+}
+function creditNumber(value){return new Intl.NumberFormat("en-US").format(value)}
+function updateCreditMetric(){
+ const used=creditNumber(state.creditsUsed);$("#creditsUsedMetric").textContent=missionCreditTarget?used+" / "+creditNumber(missionCreditTarget):used;
+}
+function meterMissionCredits(){
+ if(!missionBillingActive)return true;
+ const ratio=Math.min(1,state.elapsed/MISSION_BILLING_DURATION),expected=Math.min(missionCreditTarget,Math.floor(missionCreditTarget*ratio)),delta=expected-state.creditsUsed;
+ if(delta<=0)return true;
+ const payments=window.tokenPaymentsPrototype,charge=payments&&typeof payments.consumeCredits==="function"?payments.consumeCredits(delta,{missionId:"NS-INT-042",label:"NS-INT-042 live agent runtime",silent:true}):null;
+ if(!charge||!charge.ok){state.running=false;state.paused=true;$("#pauseBtn").textContent=String.fromCharCode(9654);event("system","Mission paused: credits exhausted","Live agent execution stopped because the credit meter could not settle the next usage interval.","amber");return false}
+ state.creditsUsed+=charge.cost;updateCreditMetric();return true;
 }
 function start(){
  if(state.complete||state.rejected||state.cursor>=timeline.length)reset(false);if(state.approval)return;
+ if(state.elapsed===0&&!missionBillingActive){
+  if(!missionCreditTarget)missionCreditTarget=MISSION_CREDIT_MIN+Math.floor(Math.random()*(MISSION_CREDIT_MAX-MISSION_CREDIT_MIN+1));
+  const payments=window.tokenPaymentsPrototype,authorization=payments&&typeof payments.authorizeCredits==="function"?payments.authorizeCredits(missionCreditTarget,{missionId:"NS-INT-042",label:"NS-INT-042 live agent runtime"}):null;
+  if(!authorization||!authorization.ok){event("system","Mission start blocked",authorization&&authorization.reason==="signin"?"Sign in with Gmail before starting the live credit meter.":"This run is estimated at "+creditNumber(missionCreditTarget)+" Agent Credits. Open Credits to fund the runtime.","amber");return}
+  missionBillingActive=true;state.creditsUsed=0;updateCreditMetric();
+ }
  if(state.elapsed===0){artifactPackets.length=0;selectedArtifactId=null;resetComms();ledgerCall("startMission","NS-INT-042")}
  if(state.elapsed===0&&!memoryRunStarted){memoryRunId="run_"+Date.now().toString(36);memoryRunStarted=true;const recalled=memory?memory.count():0;if(recalled)event("memory","Prior agent context loaded",recalled+" persistent memories are available to the specialist team.","green")}
  state.running=true;state.paused=false;$("#startBtn").textContent="● Mission running";event("system","System started","Grok Bot $Architecture event loop is active.","cyan");
@@ -236,9 +255,9 @@ function pause(){
  if(bridge)bridge.setMissionState(state.paused?"paused":"running");
 }
 function reset(announce=true){
- state.running=false;state.paused=false;state.approval=false;state.complete=false;state.rejected=false;state.elapsed=0;state.cursor=0;state.artifacts=0;state.spend=.42;agents=initial.map(a=>({...a}));resetComms();
+ state.running=false;state.paused=false;state.approval=false;state.complete=false;state.rejected=false;state.elapsed=0;state.cursor=0;state.artifacts=0;state.creditsUsed=0;missionCreditTarget=0;missionBillingActive=false;agents=initial.map(a=>({...a}));resetComms();
  memoryRunStarted=false;
- $("#approvalIdle").hidden=false;$("#approvalRequest").hidden=true;$("#airlockMetric").textContent="CLEAR";$("#airlockMetric").style.color="";$("#spendMetric").textContent="$0.42";$("#riskBadge").textContent="LOW RISK";$("#riskBadge").style.color="";$("#startBtn").textContent="▶ Start mission";$("#pauseBtn").textContent="Ⅱ";
+ $("#approvalIdle").hidden=false;$("#approvalRequest").hidden=true;$("#airlockMetric").textContent="CLEAR";$("#airlockMetric").style.color="";$("#creditsUsedMetric").textContent="0";$("#riskBadge").textContent="LOW RISK";$("#riskBadge").style.color="";$("#startBtn").textContent="▶ Start mission";$("#pauseBtn").textContent="Ⅱ";
  stage(null,0,"Build the 2026 competitor intelligence brief","Research 24 sources, map claims, build an evidence pack, audit, and prepare release.");document.querySelectorAll("#stages span").forEach(n=>n.classList.remove("active","done"));renderRoster();select("helm");if(announce)event("system","Mission reset","All agents returned to their stations; the five-minute clock is ready.","amber");
  if(bridge&&announce)bridge.resetMission();
  if(ledger&&announce){artifactPackets.length=0;selectedArtifactId=null;ledgerCall("startMission","NS-INT-042")}
@@ -348,13 +367,12 @@ function interactions(){
  for(let i=0;i<agents.length;i++)for(let j=i+1;j<agents.length;j++){const a=agents[i],b=agents[j],d=Math.hypot(a.x-b.x,a.y-b.y);if(d<122&&(a.zone==="core"||b.zone==="core")){const x=(a.x+b.x)/2,y=Math.min(a.y,b.y)-43,t=(performance.now()/1100)%1,px=a.x+(b.x-a.x)*t,py=a.y-15+(b.y-a.y)*t;ctx.strokeStyle="#8b8069";ctx.setLineDash([2,4]);ctx.beginPath();ctx.moveTo(a.x,a.y-15);ctx.lineTo(b.x,b.y-15);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle="#e0cf8a";ctx.fillRect(px-3,py-3,6,6);ctx.fillStyle="#080908";ctx.fillRect(x-31,y,62,13);ctx.fillStyle="#d2c598";ctx.font="bold 7px monospace";ctx.textAlign="center";ctx.fillText("LIVE HANDOFF",x,y+9);ctx.textAlign="left"}}
 }
 function draw(){const w=canvas.clientWidth,h=canvas.clientHeight;ctx.clearRect(0,0,w,h);const t=transform();ctx.save();ctx.translate(t.ox,t.oy);ctx.scale(t.s,t.s);room();furniture();particles();drawCommSignals();drawArtifactPackets();agents.forEach(drawAgent);interactions();ctx.restore()}
-function tick(now){const dt=Math.min(40,now-state.last);state.last=now;if(state.running&&!state.approval){state.elapsed=Math.min(state.duration,state.elapsed+dt*state.speed);while(state.cursor<timeline.length&&state.elapsed>=timeline[state.cursor].at)timeline[state.cursor++].run();if(!state.approval){const progress=Math.min(96,Math.floor(state.elapsed/state.duration*100));$("#progressBar").style.width=progress+"%";$("#progressLabel").textContent=progress+"% · "+formatDuration(state.duration-state.elapsed)+" left"}state.spend=Math.min(4.07,.42+state.elapsed/1000*.0122);$("#spendMetric").textContent="$"+state.spend.toFixed(2)}ambient(now);move(dt);draw();requestAnimationFrame(tick)}
+function tick(now){const dt=Math.min(40,now-state.last);state.last=now;if(state.running&&!state.approval){state.elapsed=Math.min(state.duration,state.elapsed+dt*state.speed);if(meterMissionCredits()){while(state.cursor<timeline.length&&state.elapsed>=timeline[state.cursor].at)timeline[state.cursor++].run();if(!state.approval){const progress=Math.min(96,Math.floor(state.elapsed/state.duration*100));$("#progressBar").style.width=progress+"%";$("#progressLabel").textContent=progress+"% · "+formatDuration(state.duration-state.elapsed)+" left"}}}ambient(now);move(dt);draw();requestAnimationFrame(tick)}
 function canvasClick(e){const r=canvas.getBoundingClientRect(),t=transform(),x=(e.clientX-r.left-t.ox)/t.s,y=(e.clientY-r.top-t.oy)/t.s,a=agents.find(q=>Math.hypot(q.x-x,q.y-y)<30);if(a)return select(a.id);const z=zones.find(q=>x>=q.x&&x<=q.x+q.w&&y>=q.y&&y<=q.y+q.h);if(z){const box=$("#selection"),crew=agents.filter(a=>a.zone===z.id).length;box.querySelector("span").textContent="STATION ZONE";box.querySelector("b").textContent=z.name;box.querySelector("p").textContent=crew+" crew assigned · "+z.type.toUpperCase()+" subsystem online.";box.style.borderColor=z.color;box.querySelector("span").style.color=z.color}}
-function clock(){$("#clock").textContent=new Intl.DateTimeFormat("en-GB",{timeZone:"Europe/Moscow",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false}).format(new Date())}
 function transportState(status,detail={}){
  const badge=$("#connectionBadge"),label=$("#connectionText"),bus=$("#eventBusStatus"),footer=$("#transportStatus"),session=(detail.sessionId||bridge&&bridge.sessionId||"session_pending").split("_").pop().slice(-6).toUpperCase();
  badge.classList.remove("connecting","online","offline");badge.classList.add(status);badge.dataset.mode=detail.mode||"mock";
- if(status==="online"){label.textContent="GROK LINK";bus.textContent="ONLINE";footer.textContent="SIM "+session+" · "+(detail.rtt||"--")+"ms · queue "+(detail.queueDepth||0)}
+ if(status==="online"){label.textContent="GROK LINK";bus.textContent="ONLINE";footer.textContent=""+session+" · "+(detail.rtt||"--")+"ms · queue "+(detail.queueDepth||0)}
  else if(status==="connecting"){label.textContent="LINKING";bus.textContent="LINKING";footer.textContent="Negotiating Grok session "+session}
  else{label.textContent="OFFLINE";bus.textContent="OFFLINE";footer.textContent="Local mission engine only"}
  badge.title="Grok Bot transport · session "+session;
@@ -369,12 +387,13 @@ function bindTransport(){
 }
 $("#startBtn").onclick=start;$("#pauseBtn").onclick=pause;$("#resetBtn").onclick=()=>reset();$("#speed").onchange=e=>{state.speed=Number(e.target.value);event("system","Timeline speed changed","System is running at "+state.speed+"×.","amber")};$("#approveBtn").onclick=()=>resolve(true);$("#rejectBtn").onclick=()=>resolve(false);$("#inspectBtn").onclick=()=>$("#inspectDialog").showModal();$("#clearFeed").onclick=()=>{$("#eventFeed").innerHTML="";state.count=0;$("#eventCount").textContent="00 EVENTS"};canvas.onclick=canvasClick;window.onresize=resize;if("ResizeObserver"in window)new ResizeObserver(resize).observe(canvas);
 window.onkeydown=e=>{if(e.code==="Space"&&e.target.tagName!=="BUTTON"){e.preventDefault();state.running?pause():start()}if(e.key.toLowerCase()==="r")reset()};
+window.addEventListener("tokenprototype",payload=>{const detail=payload.detail||{};event("wallet",detail.title||"Token prototype updated",detail.message||"Wallet state changed.",detail.tone||"cyan")});
 bindLedger();
 bindTransport();
 bindMemory();
 renderRoster();resize();select("helm");stage(null,0,"Build the 2026 competitor intelligence brief","Research 24 sources, map claims, build an evidence pack, audit, and prepare release.");document.querySelectorAll("#stages span").forEach(n=>n.classList.remove("active","done"));
 event("system","Station online","Room telemetry, pathing, and the five-minute mission clock are live.","green");event("vault","Evidence store mounted","Workspace is ready for source-linked artifacts.","cyan");event("airlock","Safety boundary armed","Publication requires one operator decision.","amber");
-clock();setInterval(clock,1000);requestAnimationFrame(tick);
+requestAnimationFrame(tick);
 const autoplay=new URLSearchParams(location.search).get("autoplay");
 if(autoplay==="memory")setTimeout(()=>{reset(false);const target=215000;while(state.cursor<timeline.length&&timeline[state.cursor].at<=target){const item=timeline[state.cursor++];state.elapsed=item.at;item.run()}state.running=false;state.paused=true;stage("review",71,"Independent audit in progress","Sentinel is testing every material claim against the evidence ledger.");state.selected="forge";memoryAgentId="forge";openMemory()},250);
 else if(autoplay==="ledger")setTimeout(ledgerShowcase,250);

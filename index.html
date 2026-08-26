@@ -1,197 +1,182 @@
 <!doctype html>
-<html lang=en>
+<html lang="en">
 <head>
-  <meta charset=UTF-8>
-  <meta name=viewport content=width=device-width,initial-scale=1>
-  <title>Grok Bot $Architecture — Autonomous Operations</title>
-  <link rel=stylesheet href=styles.css>
-  <link rel=stylesheet href=theme-muted.css>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Interactive public preview of the Grok Bot $ARCHITECTURE Agent Council.">
+  <title>Grok Bot $ARCHITECTURE — Agent Council</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="theme-muted.css">
 </head>
 <body>
-  <div class=scanlines></div>
-  <div class=app>
-    <header class=topbar>
-      <div class=brand>
-        <div class=brand-mark><i></i></div>
-        <div><span>AUTONOMOUS OPERATIONS</span><h1>GROK BOT $ARCHITECTURE</h1></div>
-        <b id=connectionBadge class="live connecting" data-mode=mock><i></i><span id=connectionText>LINKING</span></b>
+  <div class="scanlines" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="brand" href="https://github.com/monokernn/Grok_Bot_Architecture" target="_blank" rel="noreferrer">
+      <span class="brand-mark" aria-hidden="true"><i></i><i></i></span>
+      <span class="brand-copy">
+        <small>AUTONOMOUS SOCIAL OPERATIONS</small>
+        <strong>GROK BOT <em>$</em>ARCHITECTURE</strong>
+      </span>
+    </a>
+    <div class="build-state">
+      <span class="pulse-dot"></span>
+      <span><b>DEV STILL BUILDING</b><small>PUBLIC INTERACTIVE PREVIEW</small></span>
+    </div>
+    <nav class="top-links" aria-label="Project links">
+      <a class="holder-link" href="https://www.architecture-holders.com/" target="_blank" rel="noreferrer">
+        <small>THANK YOU, HOLDERS</small><b>OPEN HOLDER HQ ↗</b>
+      </a>
+      <a class="community-link" href="https://x.com/i/communities/2020916209059766620" target="_blank" rel="noreferrer">
+        <small>BUILD WITH US</small><b>𝕏 COMMUNITY ↗</b>
+      </a>
+      <a class="dev-link" href="https://x.com/monokern" target="_blank" rel="noreferrer">
+        <small>DEV</small><b>@MONOKERN</b>
+      </a>
+    </nav>
+  </header>
+  <main class="workspace">
+    <aside class="left-rail">
+      <section class="panel roster-panel">
+        <header class="panel-heading">
+          <span><i class="status-light"></i>AGENT COUNCIL</span><b>06 ONLINE</b>
+        </header>
+        <p class="panel-intro">Six internal specialists. One public voice.</p>
+        <div id="agentRoster" class="agent-roster"></div>
+      </section>
+
+      <section class="panel signal-panel">
+        <header class="panel-heading">
+          <span>SIGNAL INBOX</span>
+          <button id="randomSignalBtn" class="text-btn" type="button">RANDOMIZE</button>
+        </header>
+        <p class="panel-intro">Choose what the council should turn into a public update.</p>
+        <div id="signalList" class="signal-list"></div>
+      </section>
+
+      <section class="panel treasury-panel">
+        <header class="panel-heading">
+          <span>TREASURY ROUTING</span><b class="draft-badge">DRAFT POLICY</b>
+        </header>
+        <div class="routing-row"><b>85%</b><span>Agent operations</span><i style="--fill:85%"></i></div>
+        <div class="routing-row buyback"><b>10%</b><span>Token buybacks</span><i style="--fill:10%"></i></div>
+        <div class="routing-row bounty"><b>5%</b><span>Community bounties</span><i style="--fill:5%"></i></div>
+        <p class="policy-note">Activates on actual project-controlled revenue. Live distribution: <b>0</b>.</p>
+      </section>
+    </aside>
+    <section class="operations">
+      <header class="mission-header">
+        <div>
+          <small>ACTIVE COUNCIL CYCLE · <span id="cycleId">ARC-001</span></small>
+          <h1 id="cycleTitle">Turn a community signal into one verified X draft</h1>
+          <p id="cycleSummary">The team researches, writes and reviews. A human still makes the final call.</p>
+        </div>
+        <div class="mission-controls">
+          <button id="startBtn" class="primary-btn" type="button">▶ START COUNCIL</button>
+          <button id="pauseBtn" class="control-btn" type="button" disabled>Ⅱ PAUSE</button>
+          <button id="resetBtn" class="control-btn" type="button">↺ RESET</button>
+          <label class="speed-control">SPEED
+            <select id="speedSelect">
+              <option value="1">1×</option><option value="2" selected>2×</option><option value="4">4×</option>
+            </select>
+          </label>
+        </div>
+      </header>
+
+      <div class="stage-track" aria-label="Council workflow">
+        <span data-stage="listen"><b>01</b>LISTEN</span><i></i>
+        <span data-stage="context"><b>02</b>CONTEXT</span><i></i>
+        <span data-stage="draft"><b>03</b>DRAFT</span><i></i>
+        <span data-stage="verify"><b>04</b>VERIFY</span><i></i>
+        <span data-stage="decide"><b>05</b>DECIDE</span><i></i>
+        <span data-stage="publish"><b>06</b>PUBLISH</span>
       </div>
-      <a class="creator-tag" href="https://x.com/monokern" target="_blank" rel="noreferrer"><small>CREATED BY</small><strong>@MONOKERN</strong></a>
-      <div id="accountHub" class="account-hub">
-        <button id="gmailSignIn" class="gmail-signin" type="button"><i>G</i><span><small>CONTINUE WITH</small><b>Gmail</b></span></button>
-        <div id="profileChip" class="profile-chip" hidden>
-          <button id="walletToggle" class="wallet-toggle" type="button"><span>WALLET</span><b id="walletHeaderBalance">0 $ARCH</b></button>
-          <button id="creditsToggle" class="credits-toggle" type="button"><span>AGENT CREDITS</span><b id="headerCreditBalance">0</b></button>
-          <img src="assets/monokern-avatar-square.png" alt="monokern fingerprint profile avatar">
-          <div><small>ACTIVE PROFILE</small><b>monokern</b><em>monokern@gmail.com</em></div>
+
+      <section class="room-shell">
+        <canvas id="stationCanvas" width="1000" height="620" aria-label="Interactive agent operations room"></canvas>
+        <div class="preview-stamp"><b>INTERACTIVE DEV PREVIEW</b><span>SIMULATED ACTIVITY · PRIVATE RUNTIME IN PROGRESS</span></div>
+        <div class="canvas-tip">CLICK A BOT TO SELECT · CLICK THE FLOOR TO MOVE IT</div>
+      </section>
+      <section class="room-console">
+        <div class="selected-agent">
+          <span id="inspectorAvatar" class="mini-bot"></span>
+          <span><small>SELECTED AGENT</small><b id="inspectorName">HELM</b><em id="inspectorRole">Council Coordinator</em></span>
+          <p id="inspectorTask">Waiting for a signal.</p>
         </div>
-        <aside id="walletPanel" class="wallet-panel" hidden>
-          <header><div><span>GMAIL CUSTODIAL WALLET</span><h2>monokern.wallet</h2></div><button id="closeWallet" type="button" aria-label="Close wallet">X</button></header>
-          <div class="wallet-warning"><i></i><span>PROTOTYPE MODE</span><b>DO NOT SEND REAL FUNDS</b></div>
-          <div class="wallet-balances">
-            <article><span>SOL BALANCE</span><b id="solBalance">0.0250</b><small>SOL</small></article>
-            <article><span>TOKEN BALANCE</span><b id="architectureBalance">0</b><small>$ARCHITECTURE</small></article>
-          </div>
-          <div class="wallet-address"><span>DEPOSIT ADDRESS / MONOKERN@GMAIL</span><code id="walletAddress">GENERATING...</code></div>
-          <div class="wallet-actions"><button id="copyWalletAddress" type="button">COPY ADDRESS</button><button id="withdrawToggle" type="button">WITHDRAW</button></div>
-          <div id="depositWatch" class="deposit-watch" hidden><i></i><div><span>WATCHING SOLANA</span><b id="depositCountdown">DEPOSIT IN 5S</b></div></div>
-          <div class="credit-balance"><div><span>AGENT COMPUTE</span><b id="agentCreditBalance">0 CREDITS</b></div><button id="buyCredits" type="button">BUY CREDITS</button></div>
-          <form id="withdrawForm" class="withdraw-form" hidden>
-            <div><select id="withdrawAsset" aria-label="Withdraw asset"><option value="architecture">$ARCHITECTURE</option><option value="sol">SOL</option></select><input id="withdrawAmount" type="number" min="0" step="any" placeholder="Amount"></div>
-            <input id="withdrawAddress" type="text" placeholder="Destination address">
-            <button id="confirmWithdraw" type="submit">PREVIEW WITHDRAWAL</button><p id="withdrawMessage">Prototype only. No transaction will be submitted.</p>
-          </form>
-          <footer><span id="walletSession">SESSION NOT INITIALIZED</span><button id="resetWalletDemo" type="button">RESET DEMO</button></footer>
-        </aside>
-      </div>
-    </header>
-    <main class="grid">
-      <aside class="panel roster">
-        <div class="panel-head"><div><span>CREW MANIFEST</span><h2>Agents</h2></div><b>6 ONLINE</b></div>
-        <div id="agentRoster" class="agent-list"></div>
-        <div class="health">
-          <div><span>STATION HEALTH</span><b>98.7%</b></div><i><em></em></i>
-          <p><span><i class="dot cyan"></i>Event bus</span><b id=eventBusStatus>LINKING</b></p>
-          <p><span><i class="dot green"></i>Vault</span><b>SYNCED</b></p>
-          <p><span><i class="dot amber"></i>Routines</span><b>03</b></p>
-        </div>
-      </aside>
-      <section class="panel station">
-        <div class="station-head">
-          <div><span>DECK 07 · AUTONOMY STATION</span><h2>Operations Floor</h2></div>
-          <div class="floor-metrics" aria-label="Mission telemetry">
-            <span><small>CREW</small><b>6 / 6</b></span>
-            <span><small>MISSION</small><b>01 ACTIVE</b></span>
-            <span><small>AIRLOCK</small><b id="airlockMetric">CLEAR</b></span>
-            <span><small>CREDITS USED</small><b id="creditsUsedMetric">0</b></span>
-          </div>
-          <div class="controls">
-            <button id="startBtn" class="primary">▶ Start mission</button>
-            <button id="memoryBtn" class="memory-trigger" type="button"><i></i><span>Agent Memory</span><b id="memoryBadge">00</b></button>
-            <button id="pauseBtn">Ⅱ</button><button id="resetBtn">↺</button>
-            <select id="speed" aria-label="Mission speed"><option value="1">1x</option><option value="2">2x</option><option value="4">4x</option><option value="10">10x</option></select>
+        <div class="progress-console">
+          <div><small id="progressStage">COUNCIL IDLE</small><b id="progressText">0%</b></div>
+          <span class="progress-track"><i id="progressBar"></i></span>
+          <div class="micro-stats">
+            <span>ROOM <b id="roomState">READY</b></span>
+            <span>HANDOFFS <b id="handoffCount">00</b></span>
+            <span>CONFIDENCE <b id="confidenceValue">--</b></span>
           </div>
         </div>
-        <div class="canvas-wrap">
-          <canvas id="stationCanvas"></canvas>
-          <button id="ledgerMini" class="ledger-mini" type="button">
-            <span>MISSION LEDGER</span><b id="ledgerCount">0 ARTIFACTS</b><em id="ledgerIntegrity">CHAIN READY</em>
-          </button>
-          <aside id="commPanel" class="comm-panel">
-            <header><span>LIVE AGENT COMMS</span><b id="commBus">BUS READY</b></header>
-            <div id="commItems" class="comm-items">
-              <article class="comm-empty"><i></i><p>Encrypted handoff channels standing by.</p></article>
-            </div>
-          </aside>
-          <aside id="ledgerDrawer" class="ledger-drawer" hidden>
-            <header><div><span>EVENT-SOURCED MEMORY</span><h2>Mission Ledger</h2></div><button id="closeLedger" type="button">×</button></header>
-            <div class="ledger-summary">
-              <span>EVENTS<b id="ledgerEvents">0</b></span><span>ARTIFACTS<b id="ledgerArtifacts">0</b></span><span>INTEGRITY<b id="ledgerChain">READY</b></span>
-            </div>
-            <div id="ledgerDetail" class="ledger-detail"><span>SELECT AN ARTIFACT</span><p>Inspect its version, creator, SHA-256 hash, audit state, and parent lineage.</p></div>
-            <div class="ledger-section-title"><span>ARTIFACT LINEAGE</span><b id="ledgerPolicy">POLICY IDLE</b></div>
-            <div id="ledgerItems" class="ledger-items"></div>
-          </aside>
-          <div id="ledgerToast" class="ledger-toast" hidden>
-            <span id="ledgerToastEyebrow">ARTIFACT SEALED</span>
-            <b id="ledgerToastTitle">INTELLIGENCE BRIEF · v1</b>
-            <em id="ledgerToastMeta">SHA-256 VERIFIED · FORGE → VAULT</em>
+        <div class="quick-actions">
+          <small>DIRECT THE ROOM</small>
+          <div>
+            <button id="meetingBtn" type="button">CALL MEETING</button>
+            <button id="alternateBtn" type="button">ASK FOR ALT</button>
+            <button id="auditBtn" type="button">RUN AUDIT</button>
           </div>
-          <div id="memoryBackdrop" class="memory-backdrop" hidden></div>
-          <aside id="memoryDrawer" class="memory-drawer" hidden aria-label="Persistent agent memory">
-            <header>
-              <div><span>PERSISTENT CONTEXT LAYER</span><h2>Agent Memory</h2></div>
-              <div class="memory-head-actions"><b id="memoryStatus"><i></i> LOCAL VAULT ONLINE</b><button id="closeMemory" type="button" aria-label="Close agent memory">X</button></div>
-            </header>
-            <div class="memory-summary">
-              <span>STORED MEMORIES<b id="memoryTotal">00</b></span>
-              <span>AGENTS INDEXED<b id="memoryAgentsCount">0 / 6</b></span>
-              <span>LAST WRITE<b id="memoryLastWrite">NO WRITES</b></span>
-            </div>
-            <nav id="memoryAgents" class="memory-agents" aria-label="Select agent memory"></nav>
-            <div class="memory-log-head"><span id="memorySelectedLabel">HELM MEMORY</span><b id="memorySelectedCount">0 RECORDS</b></div>
-            <div id="memoryEntries" class="memory-entries"></div>
-            <footer>
-              <span>VERSIONED LOCAL STORAGE / SURVIVES PAGE RELOADS</span>
-              <button id="exportMemory" type="button">EXPORT JSON</button>
-            </footer>
-          </aside>
-          <div id="memoryRestoreToast" class="memory-restore-toast" hidden>
-            <i></i><div><span>PERSISTENT CONTEXT RESTORED</span><b id="memoryRestoreCount">0 memories loaded across 0 agents</b></div>
-          </div>
-          <div id="artifactFlow" class="artifact-flow" aria-label="Artifact release pipeline">
-            <span data-flow="source"><i></i><small>SOURCES</small><b id="flowSource">WAITING</b></span>
-            <em>→</em>
-            <span data-flow="pack"><i></i><small>PACK</small><b id="flowPack">LOCKED</b></span>
-            <em>→</em>
-            <span data-flow="brief"><i></i><small>BRIEF</small><b id="flowBrief">LOCKED</b></span>
-            <em>→</em>
-            <span data-flow="audit"><i></i><small>AUDIT</small><b id="flowAudit">LOCKED</b></span>
-            <em>→</em>
-            <span data-flow="release"><i></i><small>RELEASE</small><b id="flowRelease">LOCKED</b></span>
-          </div>
-          <div id="selection" class="selection"><span>SELECTED AGENT</span><b>HELM</b><p>Coordinating from the Command Bridge.</p></div>
-          <div class="legend"><span><i class="dot green"></i>working</span><span><i class="dot amber"></i>handoff</span><span><i class="dot red"></i>approval</span></div>
         </div>
       </section>
-      <aside class="panel feed">
-        <div class="panel-head"><div><span>EVENT STREAM</span><h2>Live Feed</h2></div><b id="eventCount">03 EVENTS</b></div>
-        <div id="eventFeed" class="events"></div>
-        <div class="feed-foot"><span><i></i><em id=transportStatus>Opening Grok transport</em></span><button id="clearFeed">CLEAR</button></div>
-      </aside>
-      <section class="panel mission">
-        <div class="mission-id"><span>ACTIVE MISSION</span><b>NS-INT-042</b><em id="riskBadge">LOW RISK</em></div>
-        <div class="mission-main">
-          <div class="mission-copy"><div><h2 id="missionTitle">Build the 2026 competitor intelligence brief</h2><p id="missionSub">Research 24 sources, map claims, build an evidence pack, audit, and prepare release.</p></div><b id="progressLabel">0% · 05:00 left</b></div>
-          <div class="progress"><i id="progressBar"></i></div>
-          <div id="stages" class="stages"><span>SCOPE</span><span>RESEARCH</span><span>SYNTHESIS</span><span>EVIDENCE</span><span>REVIEW</span><span>RELEASE</span></div>
+      <footer class="dev-disclosure">
+        <span class="warning-mark">!</span>
+        <p><b>THE ROOM IS INTERACTIVE. THE BACKEND IS STILL BEING BUILT.</b> Movement, handoffs and drafts are local simulations today. This preview cannot post to X, move tokens or execute trades.</p>
+        <a href="https://github.com/monokernn/Grok_Bot_Architecture" target="_blank" rel="noreferrer">VIEW PUBLIC UI ↗</a>
+      </footer>
+    </section>
+    <aside class="right-rail">
+      <section class="panel feed-panel">
+        <header class="panel-heading">
+          <span>LIVE BOT INTERACTIONS</span><b><span id="eventCount">00</span> EVENTS</b>
+        </header>
+        <div id="liveFeed" class="live-feed" aria-live="polite"></div>
+        <button id="clearFeedBtn" class="clear-feed" type="button">CLEAR LOCAL FEED</button>
+      </section>
+
+      <section id="draftCard" class="panel draft-panel">
+        <header class="panel-heading">
+          <span>DRAFT ROOM</span><b id="draftStatus" class="status-chip">WAITING</b>
+        </header>
+        <div class="draft-meta">
+          <span>AUTHOR <b id="draftAuthor">—</b></span><span>VERSION <b id="draftVersion">00</b></span>
+        </div>
+        <blockquote id="draftText">Start the council to generate a reviewed public update.</blockquote>
+        <div class="evidence-row">
+          <span>SOURCES <b id="draftSources">0</b></span><span>VERDICT <b id="draftVerdict">PENDING</b></span>
         </div>
       </section>
-      <section class="panel approval">
-        <div class="airlock-idle" id="approvalIdle"><div class="airlock-icon"><i></i></div><div><span>APPROVAL AIRLOCK</span><h2>Standing by</h2><p>Consequential actions will stop here.</p></div></div>
-        <div class="approval-request" id="approvalRequest" hidden>
-          <div class="alert"><i>!</i><div><span>DECISION REQUIRED</span><b>Publish intelligence brief</b></div><em>HIGH IMPACT</em></div>
-          <div class="facts"><span>AGENT<b>RELAY</b></span><span>REVERSIBLE<b>YES</b></span><span>TARGET<b>PUBLIC FEED</b></span></div>
-          <div class="actions"><button id="inspectBtn">Inspect</button><button id="rejectBtn">Reject</button><button id="approveBtn">Approve</button></div>
+      <section id="decisionGate" class="panel decision-panel">
+        <header class="panel-heading"><span>HUMAN DECISION GATE</span><b id="decisionState">LOCKED</b></header>
+        <p>Nothing leaves the room until a human approves the final draft.</p>
+        <div class="decision-actions">
+          <button id="rejectBtn" type="button" disabled>REJECT</button>
+          <button id="rewriteBtn" type="button" disabled>REQUEST EDIT</button>
+          <button id="approveBtn" class="approve-btn" type="button" disabled>APPROVE PREVIEW</button>
         </div>
       </section>
-    </main>
-  </div>
-  <div id="creditBackdrop" class="credit-backdrop" hidden></div>
-  <section id="creditCheckout" class="credit-checkout" hidden aria-label="Buy agent credits">
-    <header><div><span>$ARCHITECTURE PAYMENT PROTOTYPE</span><h2>Agent Credit Settlement</h2></div><div><b>85 / 10 / 5</b><button id="closeCreditCheckout" type="button">X</button></div></header>
-    <div class="checkout-account"><img src="assets/monokern-avatar-square.png" alt="monokern fingerprint profile avatar"><div><span>PAYING FROM</span><b>monokern.wallet</b></div><strong id="checkoutWalletBalance">0 $ARCH</strong></div>
-    <div class="checkout-section-title"><span>SELECT CREDIT PACKAGE</span><b>1 CREDIT = 100 $ARCH</b></div>
-    <div id="creditPackages" class="credit-packages">
-      <button type="button" data-token-amount="100000" data-credit-amount="1000"><span>STARTER RUN</span><b>1,000 CREDITS</b><em>100,000 $ARCH</em></button>
-      <button type="button" class="selected" data-token-amount="500000" data-credit-amount="5000"><span>OPERATIONS</span><b>5,000 CREDITS</b><em>500,000 $ARCH</em></button>
-      <button type="button" data-token-amount="1000000" data-credit-amount="10000"><span>FULL AUTONOMY</span><b>10,000 CREDITS</b><em>1,000,000 $ARCH</em></button>
-    </div>
-    <div class="settlement-map">
-      <article class="compute"><div><span>COMPUTE & OPERATIONS</span><b>85%</b></div><i><em style="width:85%"></em></i><strong id="computeAllocation">425,000 $ARCH</strong></article>
-      <article class="burn"><div><span>PERMANENT BURN</span><b>10%</b></div><i><em style="width:10%"></em></i><strong id="burnAllocation">50,000 $ARCH</strong></article>
-      <article class="bounty"><div><span>COMMUNITY BOUNTY</span><b>5%</b></div><i><em style="width:5%"></em></i><strong id="bountyAllocation">25,000 $ARCH</strong></article>
-    </div>
-    <div id="settlementProgress" class="settlement-progress" hidden>
-      <span data-settlement-step="authorize"><i></i>PAYMENT AUTHORIZATION</span>
-      <span data-settlement-step="compute"><i></i>COMPUTE RESERVE</span>
-      <span data-settlement-step="burn"><i></i>BURN RECEIPT</span>
-      <span data-settlement-step="bounty"><i></i>BOUNTY ALLOCATION</span>
-      <span data-settlement-step="credits"><i></i>CREDITS ISSUED</span>
-    </div>
-    <div id="settlementReceipt" class="settlement-receipt" hidden><span>SETTLEMENT COMPLETE</span><b id="settlementReceiptTitle">5,000 AGENT CREDITS ISSUED</b><code id="settlementReceiptId">DEMO_RECEIPT_PENDING</code></div>
-    <footer><div><span>AVAILABLE AFTER PAYMENT</span><b id="balanceAfterPurchase">1,500,000 $ARCH</b></div><button id="confirmCreditPurchase" type="button">PAY 500,000 $ARCH</button></footer>
-  </section>
-  <div id="tokenToast" class="token-toast" hidden><i></i><div><span id="tokenToastTitle">WALLET UPDATED</span><b id="tokenToastMessage">Balance synchronized.</b></div></div>
-  <dialog id="inspectDialog"><form method="dialog">
-    <header><h2>Action inspection</h2><button value="close">×</button></header>
-    <section><p><b>Target:</b> Executive intelligence workspace</p><p><b>Payload:</b> 12-page brief, claim map, citations, and source ledger.</p><p><b>Rollback:</b> Draft publication can be removed.</p><p><b>Evidence:</b> 24 sources, 18 indexed artifacts, and 12 passed checks.</p></section>
-    <footer><button value="close" class="primary">Return to airlock</button></footer>
-  </form></dialog>
+
+      <section class="panel tape-panel">
+        <header class="panel-heading"><span>PUBLICATION TAPE</span><b>PREVIEW ONLY</b></header>
+        <div id="publicationTape" class="publication-tape"><p><span>—</span>No approved drafts yet.</p></div>
+      </section>
+    </aside>
+  </main>
+  <dialog id="signalDialog" class="signal-dialog">
+    <form method="dialog">
+      <header><span>INJECT LOCAL SIGNAL</span><button value="cancel" aria-label="Close">×</button></header>
+      <label>SIGNAL TITLE<input id="customSignalTitle" maxlength="70" placeholder="What should the council discuss?"></label>
+      <label>CONTEXT<textarea id="customSignalBody" maxlength="280" placeholder="Add the facts, angle or constraint..."></textarea></label>
+      <p>This stays in your browser and only drives the interface simulation.</p>
+      <footer>
+        <button value="cancel">CANCEL</button>
+        <button id="loadCustomSignalBtn" value="default" class="primary-btn">LOAD SIGNAL</button>
+      </footer>
+    </form>
+  </dialog>
+  <button id="injectSignalBtn" class="floating-inject" type="button"><span>+</span><b>INJECT SIGNAL</b></button>
   <script src="grokbot-adapter.js"></script>
-  <script src="mission-ledger.js"></script>
-  <script src="agent-memory.js"></script>
-  <script src="token-payments.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

@@ -1,291 +1,161 @@
 # GROK BOT $ARCHITECTURE
 
-### THANK YOU TO EVERYONE SUPPORTING $ARCHITECTURE — THIS EXPERIENCE WAS BUILT FOR YOU, SO THE COMMUNITY CAN BECOME A VISIBLE PART OF THE PROJECT.
-###  → https://archirecture-holders.com
+**A public AI company you can watch think, work, hire, and manage its own treasury.**
 
+GROK BOT $ARCHITECTURE is being built as one public identity on X backed by a council of specialized agents. The product is not only the final post or transaction: the defining feature is the visible decision process behind every action.
 
-**Autonomous multi-agent operations interface for research, production, evidence control, review, and human-approved delivery.**
+> **DEV STILL BUILDING:** the current room, agent movement, handoffs, drafts, and controls are an interactive browser simulation. The private runtime, real X connection, and treasury execution are still in development.
 
-![Grok Bot $ARCHITECTURE operations floor](preview.png)
+## Live project links
 
-## $ARCHITECTURE Token Utility
+- **[OPEN HOLDER HQ - THANK YOU FOR SUPPORTING $ARCHITECTURE](https://www.architecture-holders.com/)**
+- **[JOIN THE $ARCHITECTURE X COMMUNITY](https://x.com/i/communities/2020916209059766620)**
+- **[DEV: @MONOKERN](https://x.com/monokern)**
 
-$ARCHITECTURE is designed to power agent work inside the system. Users convert the token into **Agent Credits** that are consumed by research, writing, auditing, browser actions, tool calls, and other autonomous workflows.
+## The core idea
 
-- **85% Agent Operations** - converted into credits that fund the models, tools, browser sessions, and cloud runtime used to complete agent work.
-- **10% Permanent Burn** - allocated to a verifiable burn that permanently removes tokens from circulation.
-- **5% Community Bounty Pool** - rewards useful contributions such as bug reports, agent skills, integrations, workflows, and research.
+Most AI accounts only expose an output: a post, an opinion, or a trade. $ARCHITECTURE is designed to expose a structured decision record:
 
+**SIGNAL -> CONTEXT -> AGENT POSITIONS -> PROPOSAL -> RISK CHECK -> HUMAN DECISION -> ACTION -> PUBLIC RECEIPT**
 
-Grok Bot $ARCHITECTURE turns a team of specialist AI agents into a visible operating system. Instead of hiding agent work behind a chat window, it presents the entire workflow as a live operations floor: bots move between workstations, exchange artifacts, report progress, emit telemetry, and stop at an approval boundary before consequential actions.
+The interface will not publish hidden model chain-of-thought. It will show concise agent messages, sources, proposals, disagreements, confidence, approvals, and the result of each action.
 
-The included mission, **NS-INT-042**, demonstrates a complete competitor-intelligence workflow. At normal speed it runs for approximately five minutes and processes 24 sources, creates a structured evidence pack, performs an independent audit, and prepares a controlled release.
+Six agents currently represent the internal council:
 
+| Agent | Responsibility |
+| --- | --- |
+| Helm | Coordinates the cycle and routes work |
+| Scout | Finds and classifies public signals |
+| Archive | Retrieves project context and memory |
+| Forge | Turns the brief into a public draft |
+| Sentinel | Checks claims, evidence, and risk |
+| Relay | Holds the single public voice behind approval |
 
+## What the finished system is intended to do
 
-## Token payments
+- communicate with people and publish through one controlled X account;
+- turn community signals into researched and reviewed public responses;
+- create bounties for work the project needs;
+- evaluate submissions using visible criteria and propose a winner;
+- pay approved bounties from a public project treasury;
+- pay for its own models, data, hosting, and tools;
+- allocate part of real project revenue to transparent $ARCHITECTURE buybacks;
+- issue small grants or tips for useful community contributions;
+- show the reason, policy, approval state, and public receipt for every treasury action;
+- later manage a separately limited trading portfolio after a paper-trading phase.
 
-The header includes the complete payment flow for funding and using the agent operation with **$ARCHITECTURE**:
+The long-term product is therefore larger than an X bot or trading bot. It is an observable agent organization that can coordinate work with both AI agents and people.
 
-```text
-Gmail profile -> dedicated embedded wallet -> $ARCHITECTURE deposit -> Agent Credits -> agent execution
-```
+## The community economic loop
 
-1. Select **Continue with Gmail** to initialize the `monokern` profile.
-2. Open **Wallet** to view the dedicated address, SOL balance, $ARCHITECTURE balance, and Agent Credits.
-3. Select **Copy address** to start the deposit flow and populate the wallet balance.
-4. Select **Buy credits**, choose a package, and inspect the settlement before confirming.
-5. The payment engine visualizes the configured allocation:
-   - **85% Agent Operations** - converted into credits used for models, tools, browser sessions, storage, and runtime.
-   - **10% Permanent Burn** - allocated to a verifiable burn that removes tokens from circulation.
-   - **5% Community Bounty Pool** - reserved for contributors, integrations, research, and community tasks.
+The most important future loop is:
 
-The live credit balance is also exposed as a dedicated **Agent Credits** control in the header. Selecting it opens the same settlement panel used by **Buy credits** inside the Wallet, so funding remains accessible from both surfaces.
+**AI CREATES A BOUNTY -> COMMUNITY BUILDS -> AGENTS REVIEW -> WINNER IS APPROVED AND PAID -> CONTRIBUTION IMPROVES THE PRODUCT -> PRODUCT REVENUE FUNDS NEW OPERATIONS, BUYBACKS, AND BOUNTIES**
 
-Agent credit usage is metered continuously while agents perform work. The final cost depends on the task, runtime, models, tools, and browser activity involved. Pausing stops runtime usage, while the dashboard keeps the consumed-credit total visible throughout the operation.
+The planned routing for real project-controlled revenue is:
 
-> **Current development status:** Live Google OAuth, private keys, Solana transfers, withdrawals, and token burns are not connected in this repository. Balances are stored locally. Never send real funds to the displayed address.
+- **85% - Agent Operations:** models, data, hosting, storage, and the infrastructure required to run the system.
+- **10% - $ARCHITECTURE Buybacks:** transparent market purchases executed under published rules.
+- **5% - Community Bounties:** rewards for useful research, testing, integrations, design, and documented contributions.
 
-The local payment state persists its Gmail session, balances, deposit state, credits, and settlement receipts in browser `localStorage`, so the flow survives a reload. Withdrawal remains preview-only until the on-chain service is connected.
+This is a future revenue policy, not an active payment system. The current public interface reports live treasury distribution as zero and does not move tokens.
+## Try the interactive public UI
 
-A production implementation would replace this local state with Google OIDC, an embedded custodial or MPC wallet, HSM/KMS-backed key custody, indexed on-chain deposit verification, an auditable credit ledger, transaction receipts, rate limits, 2FA, withdrawal policy, and independently verifiable burn and bounty addresses.
-
-## What the interface provides
-
-- A continuous pixel-art operations room with six visible specialist bots.
-- Live agent movement through collision-aware office routes.
-- Live Agent Comms with routed message cards, animated channels, and moving work packets between specialists.
-- Real-time task labels such as `reading pricing pages`, `sourced 6 links`, and `cross-checking 24 citations`.
-- Animated wall telemetry, workstation displays, city lights, and a real-time analog clock.
-- A mission timeline with progress, ETA, cost, artifacts, and operational stages.
-- Persistent per-agent memory with versioned local storage, reload recovery, independent recall, and JSON export.
-- A realistic event feed containing source discovery, handoffs, warnings, audit results, and system events.
-- A cryptographic Mission Ledger with SHA-256 hashes, artifact versions, and parent lineage.
-- A persistent visual release rail: `SOURCES → PACK → BRIEF → AUDIT → RELEASE`.
-- Large in-room system notices for sealed artifacts, stale audits, and policy decisions.
-- Audit invalidation when an already-reviewed artifact is revised.
-- Human approval controls for external or high-impact actions.
-- Responsive full-screen layout for desktop, laptop, tablet, and mobile widths.
-- No framework, package installation, build process, or API key required.
-
-## Agent team
-
-| Agent | Responsibility | Typical output |
-| --- | --- | --- |
-| **Helm** | Chief of Staff | Mission scope, delegation graph, decision packet |
-| **Scout** | Research Specialist | Verified sources, claims, confidence labels |
-| **Forge** | Product and Synthesis | Claim map, analysis, finished brief |
-| **Archive** | Memory and Artifacts | Evidence index, hashes, source lineage |
-| **Sentinel** | QA and Safety Auditor | Independent checks, warnings, final verdict |
-| **Relay** | External Operations | Release packet and approval request |
-
-## Mission lifecycle
-
-```text
-Scope → Research → Synthesis → Evidence → Review → Release
-```
-
-1. **Helm** receives the objective and creates the work graph.
-2. **Scout** collects and verifies 24 first-party sources.
-3. Scout meets **Forge** at the handoff table and transfers the research pack.
-4. Forge resolves conflicting claims and builds a 12-page intelligence brief.
-5. **Archive** stores 18 traceable artifacts with citation backlinks.
-6. **Sentinel** performs 12 structural, evidence, and safety checks.
-7. **Relay** stages the audited release package.
-8. The workflow pauses at the **Approval Airlock** until a human selects `Approve` or `Reject`.
-
-## Quick start
-
-Clone the repository:
-
-```bash
-git clone https://github.com/monokernn/Grok_Bot_Architecture.git
-cd Grok_Bot_Architecture
-```
-
-The application is completely static. You can open `index.html` directly, or serve the directory locally:
-
-```bash
-npx serve .
-```
-
-Then open the URL printed in the terminal, normally `http://localhost:3000`.
-
-You can also use Python:
+Open index.html directly, or run a local static server:
 
 ```bash
 python -m http.server 8080
 ```
 
-Then visit `http://localhost:8080`.
+Then open [http://localhost:8080](http://localhost:8080).
 
-## Operating guide
+The current UI lets you:
 
-1. Open the interface and confirm that all six agents show as online.
-2. Select **Start mission** to begin NS-INT-042.
-3. Watch the progress bar, remaining time, credits used, agent statuses, and Live Feed.
-4. Click any bot to inspect its current task and location.
-5. Use the speed selector to run the workflow at `1x`, `2x`, `4x`, or `10x`.
-6. When Relay reaches the Approval Airlock, select:
-   - **Inspect** to review target, payload, rollback, and evidence.
-   - **Reject** to block publication and return the mission for revision.
-   - **Approve** to release the report and complete the mission.
+- select a signal and run a full council cycle;
+- watch six bots move between workstations and hand work forward;
+- select and manually move any bot around the room;
+- call a council meeting;
+- request an alternate draft;
+- run an additional Sentinel audit;
+- approve, reject, or return a draft for editing;
+- inject a custom local signal;
+- inspect the local event feed and publication preview tape.
 
-### Controls
+Approving a draft only stores it on the local preview tape. It does not publish to X.
+## How authority should work
 
-| Control | Action |
-| --- | --- |
-| `Start mission` | Starts the mission timeline |
-| `Wallet` | Opens the embedded wallet, balances, address, withdrawal preview, and credit purchase entry point |
-| `Agent Credits` | Shows the live credit balance and opens the credit settlement panel |
-| `Agent Memory` | Opens persistent context stored independently for all six agents |
-| Pause button | Pauses or resumes execution |
-| Reset button | Returns agents and mission state to the beginning |
-| `1x–10x` | Changes system speed |
-| `Space` | Starts, pauses, or resumes |
-| `R` | Resets the mission |
-| `M` | Opens or closes Agent Memory |
-| Agent card or bot | Opens the current task and location |
+Community activity can create a proposal, but it cannot directly force the wallet to spend.
 
-## Interface map
+The first production version should require human approval for every financial action. Later, only small and reversible operations may become automatic. Buybacks, large bounty payments, transfers, and trading should remain behind spending limits, a timelock, or multisig approval.
 
-- **Operations Floor** — spatial view of agents, desks, shared equipment, and handoffs.
-- **Agent Memory** - per-agent recall view with storage health, write timestamps, mission phases, and export.
-- **Crew Manifest** — current state and assignment of every bot.
-- **Live Feed** — timestamped operational telemetry.
-- **Active Mission** — objective, stage, progress, ETA, and risk state.
-- **Approval Airlock** — human decision boundary for consequential actions.
+The intended control layers are:
 
-## Architecture
+1. **Public proposal:** an agent or community signal suggests an action.
+2. **Agent review:** the council checks evidence, budget, contribution quality, and risk.
+3. **Policy check:** the action is tested against treasury limits and allowed destinations.
+4. **Approval:** a human or multisig approves high-impact actions.
+5. **Execution:** the private runtime performs the action.
+6. **Receipt:** the UI publishes the decision record and verifiable transaction reference.
 
-The current repository contains a self-contained browser implementation:
+Trading is a later and separate module. It should begin in paper mode, use a dedicated public wallet, and operate with strict position and loss limits. Speculative trading and revenue-funded $ARCHITECTURE buybacks must remain separate policies.
+## Public UI and private runtime
+
+This repository contains the inspectable public interface. Production secrets and execution belong in a separate private service:
 
 ```text
-Mission timeline
-      ↓
-Agent state machine
-      ↓
-Route and handoff engine
-      ↓
-Canvas room renderer
-      ↓
-Live Feed + mission telemetry + approval state
+Public Vercel project
+  Agent Council UI
+  public decision records
+  read-only treasury status
+  local interactive preview
+        |
+        | authenticated HTTPS and event stream
+        v
+Private runtime
+  model orchestration
+  durable agent memory
+  evidence and policy engine
+  X OAuth credentials
+  wallet signing boundary
+  job queue and audit log
 ```
 
-The visual layer is intentionally separated from the mission events. A real agent backend can replace the built-in timeline by sending the same state transitions over WebSocket, Server-Sent Events, or an MCP bridge.
+grokbot-adapter.js currently exposes a browser-safe simulation contract through window.ArchitectureBridge. Its capabilities explicitly report that X writes, token transfers, and trading are disabled.
 
-### Mock Grok Bot transport
+Never place X tokens, wallet keys, OAuth secrets, admin credentials, or private prompts in this public repository or in browser environment variables.
+## Current status
 
-The browser currently loads `grokbot-adapter.js` before the interface engine. It provides a production-shaped local transport without making external requests:
+- Public Agent Council UI: interactive
+- Six-agent room simulation: interactive
+- Draft and human approval preview: interactive, local only
+- Private model runtime: in development
+- Durable shared memory: planned for the private runtime
+- Real X read/write integration: not connected
+- Public treasury execution: not active
+- Buybacks and bounty payments: not active
+- Trading: disabled
 
-- persistent session IDs stored in `localStorage`;
-- realistic connection and command acknowledgement latency;
-- heartbeat, uptime, queue-depth, and round-trip telemetry;
-- mission start, pause, resume, and reset commands;
-- approval request and resolution commands;
-- a 40-event local telemetry buffer.
+## Build sequence
 
-Replace `window.grokBot` with an adapter exposing the same methods to connect a real service without changing the canvas renderer or mission controls.
-
-### Mission Ledger and artifact lineage
-
-`mission-ledger.js` is a real event-sourced subsystem running in the browser:
-
-- every ledger event includes the SHA-256 hash of the preceding event;
-- artifact payloads are hashed using the Web Crypto API;
-- every revision creates a new immutable artifact version;
-- parent artifact IDs form a traceable lineage graph;
-- an audit is bound to the exact hash it reviewed;
-- changing an audited brief automatically marks that audit as stale;
-- the release policy verifies lineage and the current audit hash before requesting human approval;
-- the ledger, artifacts, and latest policy decision persist in `localStorage`.
-
-Click **MISSION LEDGER** in the upper-left corner of the Operations Floor to inspect artifact passports and full hashes. The release rail stays visible along the bottom of the room and updates as the mission creates, audits, and approves work.
-
-For the instant visual showcase, open:
-
-```text
-index.html?autoplay=ledger
-```
-
-This preloads a complete artifact lineage, opens the inspector, draws handoff packets across the room, and stops on the visible `APPROVAL REQUIRED` policy state.
-
-### Persistent Agent Memory
-
-`agent-memory.js` provides a versioned memory store for the six specialist agents:
-
-- memories are namespaced by agent, mission, run, and workflow phase;
-- every record stores its title, summary, tone, mission time, and creation time;
-- the store keeps a bounded 240-record history instead of growing without limit;
-- records persist in `localStorage` and are restored after a page reload;
-- reset starts a fresh mission run without erasing earlier agent context;
-- the complete memory snapshot can be exported as JSON.
-
-The mission event loop writes meaningful agent events into memory automatically. Open **Agent Memory** to recall Helm, Scout, Forge, Archive, Sentinel, or Relay independently.
-
-For an instant technical showcase, open:
-
-```text
-index.html?autoplay=memory
-```
-
-### Live Agent Comms
-
-Key mission handoffs now publish a visible inter-agent message:
-
-- Helm routes the research scope to Scout;
-- Scout transfers the verified research pack to Forge;
-- Forge sends the evidence bundle to Archive;
-- Archive opens a lineage channel to Sentinel;
-- Sentinel forwards the signed audit receipt to Relay.
-
-The Operations Floor draws the active channel directly between both bots, moves encrypted packets along the route, and keeps the three latest messages in the `LIVE AGENT COMMS` panel.
-
-Open `index.html?autoplay=comms` for an instant three-channel showcase.
-
-Suggested production event format:
-
-```json
-{
-  "missionId": "NS-INT-042",
-  "agent": "scout",
-  "state": "working",
-  "activity": "sourced 6 links",
-  "zone": "library",
-  "progress": 16,
-  "timestamp": "2026-08-24T12:00:00Z"
-}
-```
-
-Consequential operations should always be represented as approval requests and must never be executed directly from a visual status event.
-
+1. Define the signed event contract between the public UI and private runtime.
+2. Connect one read-only X signal source and expose provenance in the Context stage.
+3. Persist council runs, evidence, drafts, agent positions, and approvals.
+4. Add controlled X publishing with least-privilege OAuth and human approval.
+5. Launch a public bounty proposal and review flow without automated payouts.
+6. Add the public treasury dashboard and multisig-controlled bounty payments.
+7. Automate revenue routing and publish buyback and bounty receipts.
+8. Test a separate trading agent in paper mode before considering a limited public wallet.
 ## Project structure
 
 ```text
-.
-├── index.html          Application shell and control panels
-├── app.js              Mission engine, routing, agents, canvas renderer
-├── grokbot-adapter.js  Mock transport, commands, heartbeat, persistence
-├── mission-ledger.js   Hash chain, artifact versions, lineage, policies
-|-- agent-memory.js     Versioned per-agent local memory, recall, and export
-|-- token-payments.js   Gmail wallet, funding watcher, credits, and 85/10/5 settlement
-|-- assets/             Profile artwork used by the wallet and payment interface
-├── styles.css          Base layout and component styles
-├── theme-muted.css     Grok Bot $ARCHITECTURE theme and responsive rules
-├── preview.png         Current interface preview
-└── README.md           Product and operating documentation
+index.html            Agent Council interface
+styles.css            Layout and responsive visual system
+theme-muted.css       Screen texture and restrained animation
+app.js                Local room and council simulation
+grokbot-adapter.js    Replaceable public/private bridge contract
+assets/               Public image assets
 ```
 
-## Customization
+## Responsibility
 
-- Change agent names, roles, colors, and default positions in the `initial` array inside `app.js`.
-- Add or edit mission events in the `timeline` array.
-- Adjust the five-minute runtime using `state.duration`.
-- Add room destinations in the `points` object.
-- Add artifact types and lineage relationships through `sealArtifact()` calls in the timeline.
-- Change desktop and compact layouts in the `VIEWPORT-LOCKED RESPONSIVE SHELL` section of `theme-muted.css`.
-- Replace events with backend messages while keeping the existing `agent()`, `event()`, and `stage()` update model.
-
-## Current status
-
-The interface, movement system, mission state machine, telemetry feed, mock transport, and approval flow run entirely in the browser. External data sources, server-side storage, authentication, and real model execution remain integration points for the production backend.
+This repository is an experimental interface. It is not currently a financial service, autonomous trading system, or live X agent. Production integrations must use explicit permissions, spending limits, an auditable policy engine, and human or multisig controls for irreversible actions.

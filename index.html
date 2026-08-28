@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Interactive public preview of the Grok Bot $ARCHITECTURE Agent Council.">
-  <title>Grok Bot $ARCHITECTURE — Agent Council</title>
+  <meta name="description" content="Read-only operations floor for the Grok Bot $ARCHITECTURE Agent Council.">
+  <title>Grok Bot $ARCHITECTURE — Operations Floor</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="theme-muted.css">
 </head>
@@ -18,165 +18,135 @@
         <strong>GROK BOT <em>$</em>ARCHITECTURE</strong>
       </span>
     </a>
-    <div class="build-state">
+    <div id="connectionState" class="build-state">
       <span class="pulse-dot"></span>
-      <span><b>DEV STILL BUILDING</b><small>PUBLIC INTERACTIVE PREVIEW</small></span>
+      <span><b>CONNECTING BACKEND</b><small>PUBLIC OPERATIONS FLOOR</small></span>
     </div>
     <nav class="top-links" aria-label="Project links">
-      <a class="holder-link" href="https://www.architecture-holders.com/" target="_blank" rel="noreferrer">
-        <small>THANK YOU, HOLDERS</small><b>OPEN HOLDER HQ ↗</b>
-      </a>
+      <button id="bountyOpenBtn" class="top-reward-link" type="button">
+        <small>5M $ARCHITECTURE</small><b>COMMUNITY REWARD ↗</b>
+      </button>
       <a class="community-link" href="https://x.com/i/communities/2020916209059766620" target="_blank" rel="noreferrer">
         <small>BUILD WITH US</small><b>𝕏 COMMUNITY ↗</b>
       </a>
       <a class="dev-link" href="https://x.com/monokern" target="_blank" rel="noreferrer">
-        <small>DEV</small><b>@MONOKERN</b>
+        <small>CREATED BY</small><b>@MONOKERN</b>
       </a>
     </nav>
   </header>
-  <main class="workspace">
-    <aside class="left-rail">
-      <section class="panel roster-panel">
-        <header class="panel-heading">
-          <span><i class="status-light"></i>AGENT COUNCIL</span><b>06 ONLINE</b>
-        </header>
-        <p class="panel-intro">Six internal specialists. One public voice.</p>
-        <div id="agentRoster" class="agent-roster"></div>
+
+  <main class="workspace floor-layout">
+    <aside class="left-rail compact-left">
+      <section class="panel mission-source-panel">
+        <header class="panel-heading"><span>MISSION SOURCE</span><b id="sourceState">SYNCING</b></header>
+        <div class="source-card">
+          <small>ACTIVE INTELLIGENCE</small>
+          <b id="sourceTitle">Waiting for the private runtime...</b>
+          <p id="sourceDetail">Public operations are streamed from the agent backend.</p>
+        </div>
+        <div class="queue-stats">
+          <span>SOURCES <b id="sourceCount">00</b></span>
+          <span>CHECKS <b id="checkCount">00</b></span>
+        </div>
       </section>
 
-      <section class="panel signal-panel">
-        <header class="panel-heading">
-          <span>SIGNAL INBOX</span>
-          <button id="randomSignalBtn" class="text-btn" type="button">RANDOMIZE</button>
-        </header>
-        <p class="panel-intro">Choose what the council should turn into a public update.</p>
-        <div id="signalList" class="signal-list"></div>
-      </section>
+      <a class="holder-hq-card" href="https://www.architecture-holders.com/" target="_blank" rel="noreferrer">
+        <span><i></i>FOR THE COMMUNITY</span>
+        <strong>OPEN HOLDER HQ</strong>
+        <p>Live holder board, community history and the $ARCHITECTURE mini-game.</p>
+        <b>ENTER HQ →</b>
+      </a>
 
-      <section class="panel treasury-panel">
-        <header class="panel-heading">
-          <span>TREASURY ROUTING</span><b class="draft-badge">DRAFT POLICY</b>
-        </header>
-        <div class="routing-row"><b>85%</b><span>Agent operations</span><i style="--fill:85%"></i></div>
-        <div class="routing-row buyback"><b>10%</b><span>Token buybacks</span><i style="--fill:10%"></i></div>
-        <div class="routing-row bounty"><b>5%</b><span>Community bounties</span><i style="--fill:5%"></i></div>
-        <p class="policy-note">Activates on actual project-controlled revenue. Live distribution: <b>0</b>.</p>
+      <section class="floor-health">
+        <span><i></i>PRIVATE RUNTIME ONLINE</span>
+        <b>READ-ONLY PUBLIC VIEW</b>
+        <p>The backend directs every agent. Visitors can inspect the floor without changing it.</p>
       </section>
     </aside>
-    <section class="operations">
-      <header class="mission-header">
+
+    <section class="operations floor-operations">
+      <header class="mission-header floor-header">
         <div>
-          <small>ACTIVE COUNCIL CYCLE · <span id="cycleId">ARC-001</span></small>
-          <h1 id="cycleTitle">Turn a community signal into one verified X draft</h1>
-          <p id="cycleSummary">The team researches, writes and reviews. A human still makes the final call.</p>
+          <small>DECK 07 · AUTONOMY STATION · <span id="cycleId">SYNCING</span></small>
+          <h1 id="cycleTitle">Operations Floor</h1>
+          <p id="cycleSummary">Connecting six autonomous specialists to the shared room.</p>
         </div>
-        <div class="mission-controls">
-          <button id="startBtn" class="primary-btn" type="button">▶ START COUNCIL</button>
-          <button id="pauseBtn" class="control-btn" type="button" disabled>Ⅱ PAUSE</button>
-          <button id="resetBtn" class="control-btn" type="button">↺ RESET</button>
-          <label class="speed-control">SPEED
-            <select id="speedSelect">
-              <option value="1">1×</option><option value="2" selected>2×</option><option value="4">4×</option>
-            </select>
-          </label>
+        <div class="floor-live-badge">
+          <i></i><span><small>MISSION STATUS</small><b id="operationState">LINKING</b></span>
         </div>
       </header>
 
-      <div class="stage-track" aria-label="Council workflow">
-        <span data-stage="listen"><b>01</b>LISTEN</span><i></i>
-        <span data-stage="context"><b>02</b>CONTEXT</span><i></i>
-        <span data-stage="draft"><b>03</b>DRAFT</span><i></i>
-        <span data-stage="verify"><b>04</b>VERIFY</span><i></i>
-        <span data-stage="decide"><b>05</b>DECIDE</span><i></i>
-        <span data-stage="publish"><b>06</b>PUBLISH</span>
-      </div>
-
-      <section class="room-shell">
-        <canvas id="stationCanvas" width="1000" height="620" aria-label="Interactive agent operations room"></canvas>
-        <div class="preview-stamp"><b>INTERACTIVE DEV PREVIEW</b><span>SIMULATED ACTIVITY · PRIVATE RUNTIME IN PROGRESS</span></div>
-        <div class="canvas-tip">CLICK A BOT TO SELECT · CLICK THE FLOOR TO MOVE IT</div>
-      </section>
-      <section class="room-console">
-        <div class="selected-agent">
+      <section class="room-shell floor-room">
+        <canvas id="stationCanvas" width="1000" height="620" aria-label="Backend-synchronized agent operations room"></canvas>
+        <div class="floor-inspector">
           <span id="inspectorAvatar" class="mini-bot"></span>
-          <span><small>SELECTED AGENT</small><b id="inspectorName">HELM</b><em id="inspectorRole">Council Coordinator</em></span>
-          <p id="inspectorTask">Waiting for a signal.</p>
+          <div><small>SELECTED AGENT</small><b id="inspectorName">HELM</b><em id="inspectorRole">Chief of Staff</em></div>
+          <p id="inspectorTask">Waiting for backend state.</p>
         </div>
-        <div class="progress-console">
-          <div><small id="progressStage">COUNCIL IDLE</small><b id="progressText">0%</b></div>
-          <span class="progress-track"><i id="progressBar"></i></span>
-          <div class="micro-stats">
-            <span>ROOM <b id="roomState">READY</b></span>
-            <span>HANDOFFS <b id="handoffCount">00</b></span>
-            <span>CONFIDENCE <b id="confidenceValue">--</b></span>
-          </div>
-        </div>
-        <div class="quick-actions">
-          <small>DIRECT THE ROOM</small>
-          <div>
-            <button id="meetingBtn" type="button">CALL MEETING</button>
-            <button id="alternateBtn" type="button">ASK FOR ALT</button>
-            <button id="auditBtn" type="button">RUN AUDIT</button>
-          </div>
+        <div class="floor-legend">
+          <span><i class="legend-dot working"></i>WORKING</span>
+          <span><i class="legend-dot handoff"></i>LIVE HANDOFF</span>
+          <span><i class="legend-dot review"></i>REVIEW</span>
         </div>
       </section>
-      <footer class="dev-disclosure">
-        <span class="warning-mark">!</span>
-        <p><b>THE ROOM IS INTERACTIVE. THE BACKEND IS STILL BEING BUILT.</b> Movement, handoffs and drafts are local simulations today. This preview cannot post to X, move tokens or execute trades.</p>
-        <a href="https://github.com/monokernn/Grok_Bot_Architecture" target="_blank" rel="noreferrer">VIEW PUBLIC UI ↗</a>
+
+      <footer class="floor-bus">
+        <span><i></i>AGENT NETWORK <b id="networkState">LINKING</b></span>
+        <span>HANDOFFS <b id="handoffCount">00</b></span>
+        <span>CONFIDENCE <b id="confidenceValue">--</b></span>
+        <span>OBSERVATION MODE <b>ACTIVE</b></span>
       </footer>
     </section>
-    <aside class="right-rail">
-      <section class="panel feed-panel">
+
+    <aside class="right-rail compact-right">
+      <section class="panel roster-panel compact-roster">
         <header class="panel-heading">
-          <span>LIVE BOT INTERACTIONS</span><b><span id="eventCount">00</span> EVENTS</b>
+          <span>AGENT COUNCIL</span><b id="onlineCount">06 ONLINE</b>
         </header>
-        <div id="liveFeed" class="live-feed" aria-live="polite"></div>
-        <button id="clearFeedBtn" class="clear-feed" type="button">CLEAR LOCAL FEED</button>
+        <div id="agentRoster" class="agent-roster roster-grid"></div>
       </section>
 
-      <section id="draftCard" class="panel draft-panel">
+      <section class="panel feed-panel compact-feed">
         <header class="panel-heading">
-          <span>DRAFT ROOM</span><b id="draftStatus" class="status-chip">WAITING</b>
+          <span>LIVE AGENT HANDOFFS</span><b id="feedState">STREAMING</b>
         </header>
-        <div class="draft-meta">
-          <span>AUTHOR <b id="draftAuthor">—</b></span><span>VERSION <b id="draftVersion">00</b></span>
+        <div id="liveFeed" class="live-feed" aria-live="polite">
+          <div class="feed-empty">Waiting for backend activity...</div>
         </div>
-        <blockquote id="draftText">Start the council to generate a reviewed public update.</blockquote>
-        <div class="evidence-row">
-          <span>SOURCES <b id="draftSources">0</b></span><span>VERDICT <b id="draftVerdict">PENDING</b></span>
-        </div>
-      </section>
-      <section id="decisionGate" class="panel decision-panel">
-        <header class="panel-heading"><span>HUMAN DECISION GATE</span><b id="decisionState">LOCKED</b></header>
-        <p>Nothing leaves the room until a human approves the final draft.</p>
-        <div class="decision-actions">
-          <button id="rejectBtn" type="button" disabled>REJECT</button>
-          <button id="rewriteBtn" type="button" disabled>REQUEST EDIT</button>
-          <button id="approveBtn" class="approve-btn" type="button" disabled>APPROVE PREVIEW</button>
-        </div>
-      </section>
-
-      <section class="panel tape-panel">
-        <header class="panel-heading"><span>PUBLICATION TAPE</span><b>PREVIEW ONLY</b></header>
-        <div id="publicationTape" class="publication-tape"><p><span>—</span>No approved drafts yet.</p></div>
       </section>
     </aside>
   </main>
-  <dialog id="signalDialog" class="signal-dialog">
-    <form method="dialog">
-      <header><span>INJECT LOCAL SIGNAL</span><button value="cancel" aria-label="Close">×</button></header>
-      <label>SIGNAL TITLE<input id="customSignalTitle" maxlength="70" placeholder="What should the council discuss?"></label>
-      <label>CONTEXT<textarea id="customSignalBody" maxlength="280" placeholder="Add the facts, angle or constraint..."></textarea></label>
-      <p>This stays in your browser and only drives the interface simulation.</p>
+
+  <dialog id="bountyDialog" class="bounty-dialog">
+    <article>
+      <header>
+        <span><small>COMMUNITY REWARD ENGINE</small><b>5M $ARCHITECTURE POOL</b></span>
+        <button id="bountyCloseBtn" type="button" aria-label="Close bounty explanation">×</button>
+      </header>
+      <div class="bounty-dialog-grid">
+        <section class="bounty-allocation">
+          <span>REVENUE ALLOCATION</span>
+          <b>10%</b>
+          <p>Reserved for evidence-backed community bounties.</p>
+        </section>
+        <section>
+          <h2>How the agents find contributors</h2>
+          <p>The council can review useful support around <a href="https://x.com/monokern" target="_blank" rel="noreferrer">@monokern</a>, replies under developer posts, $ARCHITECTURE mentions and posts containing the token contract address.</p>
+          <div class="criteria-grid">
+            <span>USEFUL X SUPPORT</span><span>BUG REPORTS</span><span>PRODUCT IDEAS</span>
+            <span>RESEARCH</span><span>TESTING</span><span>DESIGN & DOCS</span>
+          </div>
+        </section>
+      </div>
       <footer>
-        <button value="cancel">CANCEL</button>
-        <button id="loadCustomSignalBtn" value="default" class="primary-btn">LOAD SIGNAL</button>
+        <span>TRACKED CA</span>
+        <code>AP8Wnu37Gf9RHgugPKGvpHe6LcTE2yp5GDy7pL5Upump</code>
+        <p>Monitoring or shortlisting does not guarantee a reward. Contributions need clear evidence and must pass the council’s payout checks.</p>
       </footer>
-    </form>
+    </article>
   </dialog>
-  <button id="injectSignalBtn" class="floating-inject" type="button"><span>+</span><b>INJECT SIGNAL</b></button>
-  <script src="grokbot-adapter.js"></script>
+
+  <script src="config.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

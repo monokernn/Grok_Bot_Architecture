@@ -1,161 +1,163 @@
 # GROK BOT $ARCHITECTURE
 
-**A public AI company you can watch think, work, hire, and manage its own treasury.**
+**A public agent organization whose work can be observed in real time.**
 
-GROK BOT $ARCHITECTURE is being built as one public identity on X backed by a council of specialized agents. The product is not only the final post or transaction: the defining feature is the visible decision process behind every action.
+GROK BOT $ARCHITECTURE is being built as one public identity backed by six specialist agents. The interface shows assignments, concise work updates, evidence handoffs, disagreements, revisions, policy checks and final receipts. It does not expose private prompts or hidden model chain-of-thought.
 
-> **DEV STILL BUILDING:** the current room, agent movement, handoffs, drafts, and controls are an interactive browser simulation. The private runtime, real X connection, and treasury execution are still in development.
+## Project links
 
-## Live project links
-
-- **[OPEN HOLDER HQ - THANK YOU FOR SUPPORTING $ARCHITECTURE](https://www.architecture-holders.com/)**
+- **[HOLDER HQ — THANK YOU FOR SUPPORTING $ARCHITECTURE](https://www.architecture-holders.com/)**
 - **[JOIN THE $ARCHITECTURE X COMMUNITY](https://x.com/i/communities/2020916209059766620)**
 - **[DEV: @MONOKERN](https://x.com/monokern)**
 
-## The core idea
+## The product
 
-Most AI accounts only expose an output: a post, an opinion, or a trade. $ARCHITECTURE is designed to expose a structured decision record:
+Most AI accounts show only the final post. $ARCHITECTURE is designed to show the operation behind it:
 
-**SIGNAL -> CONTEXT -> AGENT POSITIONS -> PROPOSAL -> RISK CHECK -> HUMAN DECISION -> ACTION -> PUBLIC RECEIPT**
+**PUBLIC SIGNALS → SPECIALIST HANDOFFS → CONTINUOUS REVIEWED OUTPUTS**
 
-The interface will not publish hidden model chain-of-thought. It will show concise agent messages, sources, proposals, disagreements, confidence, approvals, and the result of each action.
-
-Six agents currently represent the internal council:
+The six-agent council:
 
 | Agent | Responsibility |
 | --- | --- |
-| Helm | Coordinates the cycle and routes work |
-| Scout | Finds and classifies public signals |
-| Archive | Retrieves project context and memory |
-| Forge | Turns the brief into a public draft |
-| Sentinel | Checks claims, evidence, and risk |
-| Relay | Holds the single public voice behind approval |
+| **Helm** | Opens missions, coordinates the council and routes work |
+| **Scout** | Finds useful public signals and removes noise |
+| **Archive** | Retrieves project context, evidence and prior decisions |
+| **Forge** | Turns verified context into posts, briefs and proposals |
+| **Sentinel** | Independently checks claims, evidence and policy boundaries |
+| **Relay** | Prepares the single public output and its receipt |
 
-## What the finished system is intended to do
+The browser is an observer. Visitors may inspect any bot and follow the live feed, but they cannot start, pause, redirect or approve council work.
 
-- communicate with people and publish through one controlled X account;
-- turn community signals into researched and reviewed public responses;
-- create bounties for work the project needs;
-- evaluate submissions using visible criteria and propose a winner;
-- pay approved bounties from a public project treasury;
-- pay for its own models, data, hosting, and tools;
-- allocate part of real project revenue to transparent $ARCHITECTURE buybacks;
-- issue small grants or tips for useful community contributions;
-- show the reason, policy, approval state, and public receipt for every treasury action;
-- later manage a separately limited trading portfolio after a paper-trading phase.
+## Current backend-driven council
 
-The long-term product is therefore larger than an X bot or trading bot. It is an observable agent organization that can coordinate work with both AI agents and people.
+The room is connected to a separate orchestration API. The backend continuously selects work, gives every agent an independent route and work duration, emits short-lived handoffs, updates public status and prepares reviewed outputs.
 
-## The community economic loop
+A refresh does not restart the operation. State is derived from server time, so every visitor joins the same active agent network.
 
-The most important future loop is:
+The operations floor also contains a paper-market lab:
 
-**AI CREATES A BOUNTY -> COMMUNITY BUILDS -> AGENTS REVIEW -> WINNER IS APPROVED AND PAID -> CONTRIBUTION IMPROVES THE PRODUCT -> PRODUCT REVENUE FUNDS NEW OPERATIONS, BUYBACKS, AND BOUNTIES**
+- a training monitor rotates through memecoin entry, liquidity, social-signal and exit-model exercises;
+- paper PnL follows a bounded synthetic training run;
+- the $ARCHITECTURE candle tape is synthetic and advances once per second;
+- the displayed $ARCHITECTURE USD price is fetched live from the highest-liquidity Solana pool returned by the [DEX Screener API](https://docs.dexscreener.com/api/reference).
+- clicking the $ARCHITECTURE market monitor opens that live pair on DEX Screener.
 
-The planned routing for real project-controlled revenue is:
+Synthetic training visuals never represent executed trades.
 
-- **85% - Agent Operations:** models, data, hosting, storage, and the infrastructure required to run the system.
-- **10% - $ARCHITECTURE Buybacks:** transparent market purchases executed under published rules.
-- **5% - Community Bounties:** rewards for useful research, testing, integrations, design, and documented contributions.
+Current operational scenarios cover:
 
-This is a future revenue policy, not an active payment system. The current public interface reports live treasury distribution as zero and does not move tokens.
-## Try the interactive public UI
+- analysis of public $ARCHITECTURE discussion;
+- review of @monokern product posts and community replies;
+- public GitHub change reports;
+- accurate product-led X drafts without price promises;
+- token contract-address signal monitoring;
+- community support and issue routing;
+- bounty candidate evaluation;
+- narrative risk and publication-readiness checks.
 
-Open index.html directly, or run a local static server:
+The current backend uses predefined operational scenarios. Live X/GitHub ingestion, direct publishing, Grok Bot orchestration and wallet execution remain separate integration milestones. The UI never claims that an external action occurred unless a connector returns a verifiable receipt.
 
-```bash
-python -m http.server 8080
-```
+## Community reward engine
 
-Then open [http://localhost:8080](http://localhost:8080).
+The interface now displays a **5M $ARCHITECTURE reward pool** and a **10% bounty allocation**.
 
-The current UI lets you:
+The intended council can identify evidence-backed contributions from public activity around @monokern, replies under developer updates, $ARCHITECTURE mentions and posts containing the token contract address:
 
-- select a signal and run a full council cycle;
-- watch six bots move between workstations and hand work forward;
-- select and manually move any bot around the room;
-- call a council meeting;
-- request an alternate draft;
-- run an additional Sentinel audit;
-- approve, reject, or return a draft for editing;
-- inject a custom local signal;
-- inspect the local event feed and publication preview tape.
+AP8Wnu37Gf9RHgugPKGvpHe6LcTE2yp5GDy7pL5Upump
 
-Approving a draft only stores it on the local preview tape. It does not publish to X.
-## How authority should work
+Examples of useful contributions:
 
-Community activity can create a proposal, but it cannot directly force the wallet to spend.
+- reproducible bug reports and fixes;
+- testing and product feedback;
+- original research and useful public explanations;
+- documentation, integrations and design work;
+- sustained, high-signal community support.
 
-The first production version should require human approval for every financial action. Later, only small and reversible operations may become automatic. Buybacks, large bounty payments, transfers, and trading should remain behind spending limits, a timelock, or multisig approval.
+Post volume alone does not qualify. Monitoring or shortlisting does not guarantee payment; the contribution needs evidence and must pass identity, safety and payout checks.
 
-The intended control layers are:
+Current revenue policy displayed by the project:
 
-1. **Public proposal:** an agent or community signal suggests an action.
-2. **Agent review:** the council checks evidence, budget, contribution quality, and risk.
-3. **Policy check:** the action is tested against treasury limits and allowed destinations.
-4. **Approval:** a human or multisig approves high-impact actions.
-5. **Execution:** the private runtime performs the action.
-6. **Receipt:** the UI publishes the decision record and verifiable transaction reference.
+- **10% → $ARCHITECTURE buybacks**
+- **10% → community bounties**
 
-Trading is a later and separate module. It should begin in paper mode, use a dedicated public wallet, and operate with strict position and loss limits. Speculative trading and revenue-funded $ARCHITECTURE buybacks must remain separate policies.
+Financial execution is not implemented in this public client. Keys, payout rules and signing boundaries belong only in the private runtime.
+
 ## Public UI and private runtime
 
-This repository contains the inspectable public interface. Production secrets and execution belong in a separate private service:
+This repository intentionally contains the inspectable UI, not operational secrets:
 
-```text
+~~~text
 Public Vercel project
-  Agent Council UI
-  public decision records
-  read-only treasury status
-  local interactive preview
-        |
-        | authenticated HTTPS and event stream
-        v
-Private runtime
-  model orchestration
-  durable agent memory
-  evidence and policy engine
-  X OAuth credentials
-  wallet signing boundary
-  job queue and audit log
-```
+  read-only Agent Council UI
+  canvas room and live event feed
+  public work status and live handoffs
+              │
+              │ GET /api/state
+              ▼
+Private Vercel project
+  continuous orchestration engine
+  scenario and agent position logic
+  sanitized public event contract
+              │
+              ▼ later
+Private long-running runtime / VPS
+  Grok Bot connector and durable jobs
+  live X and GitHub connectors
+  policy engine, database and audit log
+  isolated wallet signing boundary
+~~~
 
-grokbot-adapter.js currently exposes a browser-safe simulation contract through window.ArchitectureBridge. Its capabilities explicitly report that X writes, token transfers, and trading are disabled.
+The public client receives only sanitized state. Never place X tokens, Grok credentials, wallet keys, OAuth secrets, internal prompts or administrative endpoints in this repository or in browser environment variables.
 
-Never place X tokens, wallet keys, OAuth secrets, admin credentials, or private prompts in this public repository or in browser environment variables.
-## Current status
+## Local start
 
-- Public Agent Council UI: interactive
-- Six-agent room simulation: interactive
-- Draft and human approval preview: interactive, local only
-- Private model runtime: in development
-- Durable shared memory: planned for the private runtime
-- Real X read/write integration: not connected
-- Public treasury execution: not active
-- Buybacks and bounty payments: not active
-- Trading: disabled
+Start the private backend first:
 
-## Build sequence
+~~~powershell
+cd ..\demo_back
+npm start
+~~~
 
-1. Define the signed event contract between the public UI and private runtime.
-2. Connect one read-only X signal source and expose provenance in the Context stage.
-3. Persist council runs, evidence, drafts, agent positions, and approvals.
-4. Add controlled X publishing with least-privilege OAuth and human approval.
-5. Launch a public bounty proposal and review flow without automated payouts.
-6. Add the public treasury dashboard and multisig-controlled bounty payments.
-7. Automate revenue routing and publish buyback and bounty receipts.
-8. Test a separate trading agent in paper mode before considering a limited public wallet.
+Then serve this public directory in another terminal:
+
+~~~powershell
+python -m http.server 8080
+~~~
+
+Open [http://localhost:8080](http://localhost:8080). The default local configuration in config.js connects to http://localhost:8790.
+
+No npm installation is required for either side.
+
+## Deploying two Vercel projects
+
+1. Put nightshift in the public Git repository and deploy it as the public UI project.
+2. Put demo_back in a private Git repository and deploy it as the private API project.
+3. In the backend Vercel project, set ALLOWED_ORIGIN to the exact public UI origin.
+4. In config.js, set apiBase to the private backend project origin.
+5. Redeploy the public UI and verify that the header reports PRIVATE BACKEND ONLINE.
+
+The backend does not keep one serverless function open. Each request derives the current operation state from the server clock, which fits a stateless Vercel API and avoids a database for this phase.
+
 ## Project structure
 
-```text
-index.html            Agent Council interface
-styles.css            Layout and responsive visual system
-theme-muted.css       Screen texture and restrained animation
-app.js                Local room and council simulation
-grokbot-adapter.js    Replaceable public/private bridge contract
-assets/               Public image assets
-```
+~~~text
+index.html         Read-only Agent Council interface
+styles.css         Responsive layout and visual system
+theme-muted.css    Screen texture and restrained animation
+config.js          Public backend-origin configuration
+app.js             API polling, UI projection and canvas renderer
+assets/            Public image assets
+~~~
 
-## Responsibility
+## Development path
 
-This repository is an experimental interface. It is not currently a financial service, autonomous trading system, or live X agent. Production integrations must use explicit permissions, spending limits, an auditable policy engine, and human or multisig controls for irreversible actions.
+1. Persist runs, evidence references and receipts in a private database.
+2. Replace predefined inputs with read-only X and GitHub connectors.
+3. Connect real Grok Bot agents to the same sanitized event contract.
+4. Add autonomous X drafting and bounded publication policies.
+5. Launch evidence-backed bounty proposals without automatic payouts.
+6. Add a public treasury ledger and constrained bounty execution.
+7. Introduce a separately limited agent wallet only after paper-mode testing, spending limits and emergency controls.
+
+The goal is not another chatbot dashboard. It is an observable agent council that can research, disagree, decide and eventually act through narrow, verifiable permissions.

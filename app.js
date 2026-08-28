@@ -366,7 +366,7 @@
     ctx.lineWidth = 1;
     ctx.fillStyle = '#d9ff83';
     ctx.font = 'bold 15px Consolas';
-    ctx.fillText('$ARCHITECTURE', x + 10, y + 19);
+    ctx.fillText('ARCHITECTURE', x + 10, y + 19);
     ctx.fillStyle = '#7d9180';
     ctx.font = 'bold 8px Consolas';
     ctx.fillText('LIVE TOKEN MARKET', x + 11, y + 32);
@@ -548,7 +548,7 @@
     ctx.fillRect(0, 136, 1000, 16);
     ctx.fillStyle = '#77736a';
     ctx.font = 'bold 9px Consolas';
-    ctx.fillText('GROK BOT $ARCHITECTURE · ONE NETWORK · SIX AGENTS · FLOOR STATUS: ACTIVE', 30, 148);
+    ctx.fillText('GROK BOT ARCHITECTURE · ONE NETWORK · SIX AGENTS · FLOOR STATUS: ACTIVE', 30, 148);
     [165, 500, 835].forEach(function (x) {
       ctx.fillStyle = '#d7c28b10';
       ctx.beginPath();

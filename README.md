@@ -1,18 +1,18 @@
-# GROK BOT $ARCHITECTURE
+# GROK BOT ARCHITECTURE
 
 **A public agent organization whose work can be observed in real time.**
 
-GROK BOT $ARCHITECTURE is being built as one public identity backed by six specialist agents. The interface shows assignments, concise work updates, evidence handoffs, disagreements, revisions, policy checks and final receipts. It does not expose private prompts or hidden model chain-of-thought.
+GROK BOT ARCHITECTURE is being built as one public identity backed by six specialist agents. The interface shows assignments, concise work updates, evidence handoffs, disagreements, revisions, policy checks and final receipts. It does not expose private prompts or hidden model chain-of-thought.
 
 ## Project links
 
-- **[HOLDER HQ — THANK YOU FOR SUPPORTING $ARCHITECTURE](https://www.architecture-holders.com/)**
-- **[JOIN THE $ARCHITECTURE X COMMUNITY](https://x.com/i/communities/2020916209059766620)**
+- **[HOLDER HQ — THANK YOU FOR SUPPORTING ARCHITECTURE](https://www.architecture-holders.com/)**
+- **[JOIN THE ARCHITECTURE X COMMUNITY](https://x.com/i/communities/2020916209059766620)**
 - **[DEV: @MONOKERN](https://x.com/monokern)**
 
 ## The product
 
-Most AI accounts show only the final post. $ARCHITECTURE is designed to show the operation behind it:
+Most AI accounts show only the final post. ARCHITECTURE is designed to show the operation behind it:
 
 **PUBLIC SIGNALS → SPECIALIST HANDOFFS → CONTINUOUS REVIEWED OUTPUTS**
 
@@ -39,15 +39,15 @@ The operations floor also contains a paper-market lab:
 
 - a static coming-soon monitor introduces the separate agent system being prepared to learn memecoin market behavior in paper mode;
 - the trading agent's paper PnL is generated from shared backend time, so every visitor sees the same paper-wallet performance;
-- the $ARCHITECTURE paper-market tape advances once per server second and stays synchronized across tabs and devices;
-- the displayed $ARCHITECTURE USD price is fetched live from the highest-liquidity Solana pool returned by the [DEX Screener API](https://docs.dexscreener.com/api/reference).
-- clicking the $ARCHITECTURE market monitor opens that live pair on DEX Screener.
+- the ARCHITECTURE paper-market tape advances once per server second and stays synchronized across tabs and devices;
+- the displayed ARCHITECTURE USD price is fetched live from the highest-liquidity Solana pool returned by the [DEX Screener API](https://docs.dexscreener.com/api/reference).
+- clicking the ARCHITECTURE market monitor opens that live pair on DEX Screener.
 
 The trading layer currently operates in paper mode while its live execution connector is being prepared.
 
 Current operational scenarios cover:
 
-- analysis of public $ARCHITECTURE discussion;
+- analysis of public ARCHITECTURE discussion;
 - review of @monokern product posts and community replies;
 - public GitHub change reports;
 - accurate product-led X drafts without price promises;
@@ -60,9 +60,9 @@ The current backend uses predefined operational scenarios. Live X/GitHub ingesti
 
 ## Community reward engine
 
-The interface now displays a **5M $ARCHITECTURE reward pool** and a **10% bounty allocation**.
+The interface now displays a **5M ARCHITECTURE reward pool** and a **10% bounty allocation**.
 
-The intended council can identify evidence-backed contributions from public activity around @monokern, replies under developer updates, $ARCHITECTURE mentions and posts containing the token contract address:
+The intended council can identify evidence-backed contributions from public activity around @monokern, replies under developer updates, ARCHITECTURE mentions and posts containing the token contract address:
 
 AP8Wnu37Gf9RHgugPKGvpHe6LcTE2yp5GDy7pL5Upump
 
@@ -78,7 +78,7 @@ Post volume alone does not qualify. Monitoring or shortlisting does not guarante
 
 Current revenue policy displayed by the project:
 
-- **10% → $ARCHITECTURE buybacks**
+- **10% → ARCHITECTURE buybacks**
 - **10% → community bounties**
 
 Financial execution is not implemented in this public client. Keys, payout rules and signing boundaries belong only in the private runtime.

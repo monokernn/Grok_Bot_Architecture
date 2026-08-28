@@ -67,10 +67,7 @@
     pnl: 34,
     pnlVelocity: 0,
     pnlHistory: [],
-    candles: [],
-    trainingStep: 0,
-    trainingProgress: 0,
-    trainingLoss: .0824
+    candles: []
   };
 
   function clamp(value, minimum, maximum) {
@@ -91,10 +88,6 @@
   }
 
   function updateMarketTape() {
-    market.trainingStep += 1;
-    market.trainingProgress = (market.trainingProgress + 1.7 + Math.random() * 2.8) % 100;
-    market.trainingLoss = clamp(market.trainingLoss * (.987 + Math.random() * .015), .009, .12);
-
     const centerPull = (72 - market.pnl) * .018;
     market.pnlVelocity = market.pnlVelocity * .58 + (Math.random() - .49) * 19 + centerPull;
     market.pnl = clamp(market.pnl + market.pnlVelocity, -20, 200);
@@ -345,33 +338,25 @@
     line(x + 8, y + 18, x + w - 8, y + 18, '#1f2824', 1);
   }
 
-  function drawTrainingMonitor(x, y, w, h, time) {
-    const stages = ['MEMECOIN ENTRY POLICY', 'LIQUIDITY FILTER', 'SOCIAL SIGNAL RANKER', 'RISK EXIT MODEL'];
-    const stage = stages[Math.floor(market.trainingStep / 17) % stages.length];
-    drawMonitorFrame(x, y, w, h, 'MODEL TRAINING / PAPER MARKET');
-    ctx.fillStyle = '#a8d965';
-    ctx.font = 'bold 12px Consolas';
-    ctx.fillText(stage, x + 10, y + 39);
-    ctx.fillStyle = '#58635a';
-    ctx.font = '8px Consolas';
-    ctx.fillText('EPOCH ' + String(market.trainingStep + 1).padStart(4, '0'), x + 10, y + 57);
-    ctx.fillText('LOSS ' + market.trainingLoss.toFixed(4), x + w - 82, y + 57);
-    ctx.fillStyle = '#182019';
-    ctx.fillRect(x + 10, y + 67, w - 20, 10);
-    ctx.fillStyle = '#83bd61';
-    ctx.fillRect(x + 10, y + 67, (w - 20) * market.trainingProgress / 100, 10);
+  function drawTrainingMonitor(x, y, w, h) {
+    drawMonitorFrame(x, y, w, h, 'SEPARATE TRADING SYSTEM');
+    ctx.fillStyle = '#d9ff83';
+    ctx.font = 'bold 18px Consolas';
+    ctx.fillText('LIVE LINK COMING SOON', x + 10, y + 43);
+    ctx.fillStyle = '#a9c77d';
+    ctx.font = 'bold 9px Consolas';
+    ctx.fillText('MEMECOIN TRADING MODEL', x + 10, y + 61);
     ctx.fillStyle = '#8d978c';
     ctx.font = '8px Consolas';
-    ctx.fillText(Math.floor(market.trainingProgress) + '% · REPLAYING MARKET EPISODES', x + 10, y + 96);
-    const pulse = 2 + Math.sin(time / 180) * 1.4;
-    ctx.fillStyle = '#b9e65a';
-    ctx.beginPath();
-    ctx.arc(x + w - 13, y + 11, pulse, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.fillText('A second agent system is learning', x + 10, y + 80);
+    ctx.fillText('market behavior in paper mode.', x + 10, y + 93);
+    ctx.fillStyle = '#d4aa62';
+    ctx.font = 'bold 7px Consolas';
+    ctx.fillText('MODEL RUNNING · CONNECTOR PENDING', x + 10, y + 109);
   }
 
   function drawPnlMonitor(x, y, w, h) {
-    drawMonitorFrame(x, y, w, h, 'PAPER PNL / TRAINING WALLET');
+    drawMonitorFrame(x, y, w, h, 'TRADING AGENT / PAPER PNL');
     const positive = market.pnl >= 0;
     const color = positive ? '#76dda0' : '#ef746c';
     const sign = market.pnl > 0 ? '+' : '';
@@ -380,7 +365,7 @@
     ctx.fillText(sign + '$' + market.pnl.toFixed(2), x + 10, y + 48);
     ctx.fillStyle = '#5f6a62';
     ctx.font = '8px Consolas';
-    ctx.fillText('RANGE  -$20  /  +$200', x + 10, y + 63);
+    ctx.fillText('MODEL RUNNING · PAPER WALLET', x + 10, y + 63);
 
     const values = market.pnlHistory;
     if (values.length < 2) return;
@@ -452,7 +437,7 @@
     });
     ctx.fillStyle = '#5c685f';
     ctx.font = 'bold 7px Consolas';
-    ctx.fillText('LIVE PRICE · SYNTHETIC CANDLES', gx, y + h - 5);
+    ctx.fillText('LIVE PRICE · PAPER MARKET TAPE', gx, y + h - 5);
     ctx.textAlign = 'right';
     ctx.fillStyle = ui.marketHover ? '#d9ff83' : '#8faa75';
     ctx.fillText('OPEN DEXSCREENER ↗', x + w - 10, y + h - 5);
@@ -581,7 +566,7 @@
     ctx.strokeStyle = '#241e18';
     for (let y = 152; y < 620; y += 25) line(0, y, 1000, y, '#241e18', 1);
     for (let x = -80; x < 1080; x += 75) line(x, 152, x + 30, 620, '#201c18', 1);
-    drawTrainingMonitor(14, 10, 270, 120, time);
+    drawTrainingMonitor(14, 10, 270, 120);
     drawPnlMonitor(294, 10, 210, 120);
     drawMarketMonitor(MARKET_MONITOR.x, MARKET_MONITOR.y, MARKET_MONITOR.w, MARKET_MONITOR.h);
     drawClock(950, 70);

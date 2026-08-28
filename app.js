@@ -64,44 +64,13 @@
     pairUrl: DEX_FALLBACK_URL,
     priceStatus: 'FETCHING',
     priceUpdatedAt: 0,
-    pnl: 34,
-    pnlVelocity: 0,
+    pnl: 0,
     pnlHistory: [],
     candles: []
   };
 
   function clamp(value, minimum, maximum) {
     return Math.max(minimum, Math.min(maximum, value));
-  }
-
-  function initializeMarketTape() {
-    let value = 100;
-    for (let index = 0; index < 34; index += 1) {
-      const open = value;
-      const close = clamp(open + (Math.random() - .48) * 7, 72, 132);
-      const high = Math.max(open, close) + Math.random() * 4.5;
-      const low = Math.min(open, close) - Math.random() * 4.5;
-      market.candles.push({ open, high, low, close });
-      value = close;
-    }
-    for (let index = 0; index < 40; index += 1) market.pnlHistory.push(market.pnl);
-  }
-
-  function updateMarketTape() {
-    const centerPull = (72 - market.pnl) * .018;
-    market.pnlVelocity = market.pnlVelocity * .58 + (Math.random() - .49) * 19 + centerPull;
-    market.pnl = clamp(market.pnl + market.pnlVelocity, -20, 200);
-    market.pnlHistory.push(market.pnl);
-    if (market.pnlHistory.length > 48) market.pnlHistory.shift();
-
-    const previous = market.candles[market.candles.length - 1];
-    const open = previous ? previous.close : 100;
-    const trendPull = (104 - open) * .035;
-    const close = clamp(open + (Math.random() - .49) * 8 + trendPull, 68, 138);
-    const high = Math.max(open, close) + 1 + Math.random() * 5;
-    const low = Math.min(open, close) - 1 - Math.random() * 5;
-    market.candles.push({ open, high, low, close });
-    if (market.candles.length > 38) market.candles.shift();
   }
 
   function formatTokenPrice(value) {
@@ -242,6 +211,11 @@
     ui.connected = true;
     ui.lastSuccess = Date.now();
     ui.links = Array.isArray(data.links) ? data.links : [];
+    if (data.market) {
+      if (Number.isFinite(Number(data.market.pnl))) market.pnl = Number(data.market.pnl);
+      if (Array.isArray(data.market.pnlHistory)) market.pnlHistory = data.market.pnlHistory.map(Number);
+      if (Array.isArray(data.market.candles)) market.candles = data.market.candles;
+    }
     setConnection('connected', 'PUBLIC OPERATIONS FLOOR');
 
     data.agents.forEach(function (remote) {
@@ -821,10 +795,7 @@
     if (event.target === bountyDialog) bountyDialog.close();
   });
 
-  initializeMarketTape();
-  updateMarketTape();
   fetchLiveTokenPrice();
-  window.setInterval(updateMarketTape, 1000);
   window.setInterval(fetchLiveTokenPrice, 30000);
   renderRoster();
   renderInspector();

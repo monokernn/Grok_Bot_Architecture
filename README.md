@@ -38,8 +38,8 @@ A refresh does not restart the operation. State is derived from server time, so 
 The operations floor also contains a paper-market lab:
 
 - a static coming-soon monitor introduces the separate agent system being prepared to learn memecoin market behavior in paper mode;
-- the trading agent's paper PnL displays its current paper-wallet performance;
-- the $ARCHITECTURE paper-market tape advances once per second;
+- the trading agent's paper PnL is generated from shared backend time, so every visitor sees the same paper-wallet performance;
+- the $ARCHITECTURE paper-market tape advances once per server second and stays synchronized across tabs and devices;
 - the displayed $ARCHITECTURE USD price is fetched live from the highest-liquidity Solana pool returned by the [DEX Screener API](https://docs.dexscreener.com/api/reference).
 - clicking the $ARCHITECTURE market monitor opens that live pair on DEX Screener.
 

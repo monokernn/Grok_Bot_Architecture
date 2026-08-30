@@ -5,9 +5,9 @@
   const config = window.ARCHITECTURE_CONFIG || {};
   const apiBase = String(config.apiBase || '').replace(/\/$/, '');
   const stateUrl = apiBase + '/api/state';
-  const TOKEN_ADDRESS = 'AP8Wnu37Gf9RHgugPKGvpHe6LcTE2yp5GDy7pL5Upump';
-  const PRICE_URL = 'https://api.dexscreener.com/tokens/v1/solana/' + TOKEN_ADDRESS;
-  const DEX_FALLBACK_URL = 'https://dexscreener.com/search?q=' + encodeURIComponent(TOKEN_ADDRESS);
+  const TOKEN_ADDRESS = '0xe2f888673ab2467146e33f079fdb7be09285d5da';
+  const PRICE_URL = 'https://api.dexscreener.com/latest/dex/tokens/' + TOKEN_ADDRESS;
+  const TOKEN_LAUNCHPAD_URL = 'https://www.ponsfamily.com/launchpad/' + TOKEN_ADDRESS;
   const MARKET_MONITOR = { x: 514, y: 10, w: 380, h: 120 };
   const pollInterval = Math.max(650, Number(config.pollIntervalMs) || 900);
   const canvas = byId('stationCanvas');
@@ -61,7 +61,7 @@
   const market = {
     livePrice: null,
     liveChange24h: null,
-    pairUrl: DEX_FALLBACK_URL,
+    pairUrl: TOKEN_LAUNCHPAD_URL,
     priceStatus: 'FETCHING',
     priceUpdatedAt: 0,
     pnl: 0,
@@ -85,8 +85,9 @@
     try {
       const response = await fetch(PRICE_URL, { cache: 'no-store', headers: { Accept: 'application/json' } });
       if (!response.ok) throw new Error('HTTP ' + response.status);
-      const pairs = await response.json();
-      const available = Array.isArray(pairs)
+      const payload = await response.json();
+      const pairs = Array.isArray(payload) ? payload : Array.isArray(payload && payload.pairs) ? payload.pairs : [];
+      const available = pairs
         ? pairs.filter(function (pair) { return Number.isFinite(Number(pair.priceUsd)); })
         : [];
       if (!available.length) throw new Error('No priced pool');
@@ -95,7 +96,7 @@
       });
       market.livePrice = Number(available[0].priceUsd);
       market.liveChange24h = Number(available[0].priceChange && available[0].priceChange.h24);
-      market.pairUrl = available[0].url || DEX_FALLBACK_URL;
+      market.pairUrl = TOKEN_LAUNCHPAD_URL;
       market.priceStatus = 'LIVE';
       market.priceUpdatedAt = Date.now();
     } catch (error) {
@@ -366,7 +367,7 @@
     ctx.lineWidth = 1;
     ctx.fillStyle = '#d9ff83';
     ctx.font = 'bold 15px Consolas';
-    ctx.fillText('ARCHITECTURE', x + 10, y + 19);
+    ctx.fillText('$GBA', x + 10, y + 19);
     ctx.fillStyle = '#7d9180';
     ctx.font = 'bold 8px Consolas';
     ctx.fillText('LIVE TOKEN MARKET', x + 11, y + 32);
@@ -414,7 +415,7 @@
     ctx.fillText('LIVE PRICE · PAPER MARKET TAPE', gx, y + h - 5);
     ctx.textAlign = 'right';
     ctx.fillStyle = ui.marketHover ? '#d9ff83' : '#8faa75';
-    ctx.fillText('OPEN DEXSCREENER ↗', x + w - 10, y + h - 5);
+    ctx.fillText('OPEN PONS ↗', x + w - 10, y + h - 5);
     ctx.textAlign = 'left';
   }
 
@@ -758,7 +759,7 @@
       point.x >= MARKET_MONITOR.x && point.x <= MARKET_MONITOR.x + MARKET_MONITOR.w &&
       point.y >= MARKET_MONITOR.y && point.y <= MARKET_MONITOR.y + MARKET_MONITOR.h
     ) {
-      window.open(market.pairUrl || DEX_FALLBACK_URL, '_blank', 'noopener,noreferrer');
+      window.open(market.pairUrl || TOKEN_LAUNCHPAD_URL, '_blank', 'noopener,noreferrer');
       return;
     }
     let closest = null;

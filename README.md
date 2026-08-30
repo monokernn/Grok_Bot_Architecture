@@ -39,9 +39,9 @@ The operations floor also contains a paper-market lab:
 
 - a static coming-soon monitor introduces the separate agent system being prepared to learn memecoin market behavior in paper mode;
 - the trading agent's paper PnL is generated from shared backend time, so every visitor sees the same paper-wallet performance;
-- the ARCHITECTURE paper-market tape advances once per server second and stays synchronized across tabs and devices;
-- the displayed ARCHITECTURE USD price is fetched live from the highest-liquidity Solana pool returned by the [DEX Screener API](https://docs.dexscreener.com/api/reference).
-- clicking the ARCHITECTURE market monitor opens that live pair on DEX Screener.
+- the $GBA paper-market tape advances once per server second and stays synchronized across tabs and devices;
+- the displayed $GBA USD price is fetched live from the highest-liquidity pool returned by the [DEX Screener API](https://docs.dexscreener.com/api/reference).
+- clicking the $GBA market monitor opens its [Pons launchpad page](https://www.ponsfamily.com/launchpad/0xe2f888673ab2467146e33f079fdb7be09285d5da).
 
 The trading layer currently operates in paper mode while its live execution connector is being prepared.
 

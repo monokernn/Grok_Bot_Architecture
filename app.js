@@ -789,13 +789,6 @@
     canvas.style.cursor = 'default';
   });
 
-  const bountyDialog = byId('bountyDialog');
-  byId('bountyOpenBtn').addEventListener('click', function () { bountyDialog.showModal(); });
-  byId('bountyCloseBtn').addEventListener('click', function () { bountyDialog.close(); });
-  bountyDialog.addEventListener('click', function (event) {
-    if (event.target === bountyDialog) bountyDialog.close();
-  });
-
   fetchLiveTokenPrice();
   window.setInterval(fetchLiveTokenPrice, 30000);
   renderRoster();

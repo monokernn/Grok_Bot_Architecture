@@ -368,7 +368,17 @@ button:disabled { opacity: .35; cursor: not-allowed; }
     radial-gradient(circle at 100% 0, #b9e65a1f, transparent 48%),
     linear-gradient(145deg, #10180d, #0a0d0a);
   box-shadow: inset 0 2px var(--acid);
-  transition: transform .18s, border-color .18s;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform .18s, border-color .18s, box-shadow .18s;
+}
+.holder-hq-card:hover,
+.holder-hq-card:focus-visible {
+  transform: translateY(-2px);
+  border-color: var(--acid);
+  box-shadow: inset 0 2px var(--acid), 0 8px 24px #0008, 0 0 18px #b9e65a1c;
+  outline: none;
 }
 .holder-hq-card > span { display: flex; align-items: center; gap: 7px; color: #9fbb70; font-size: 7px; letter-spacing: .13em; }
 .holder-hq-card > span i { width: 6px; height: 6px; background: var(--acid); box-shadow: 0 0 10px var(--acid); }

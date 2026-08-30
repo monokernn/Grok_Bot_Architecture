@@ -1,4 +1,4 @@
-# GROK BOT ARCHITECTURE
+# GROK BOT ARCHITECTURE ($GBA)
 
 **A public agent organization whose work can be observed in real time.**
 

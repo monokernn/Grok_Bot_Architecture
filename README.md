@@ -7,7 +7,6 @@ GROK BOT ARCHITECTURE is being built as one public identity backed by six specia
 ## Project links
 
 - **[HOLDER HQ — THANK YOU FOR SUPPORTING ARCHITECTURE](https://www.architecture-holders.com/)**
-- **[JOIN THE ARCHITECTURE X COMMUNITY](https://x.com/i/communities/2020916209059766620)**
 - **[DEV: @MONOKERN](https://x.com/monokern)**
 
 ## The product

@@ -4,6 +4,12 @@
 
 GROK BOT ARCHITECTURE is being built as one public identity backed by six specialist agents. The interface shows assignments, concise work updates, evidence handoffs, disagreements, revisions, policy checks and final receipts. It does not expose private prompts or hidden model chain-of-thought.
 
+## HELM // Chief of Staff
+
+**HELM coordinates the six-agent council and serves as its public operational voice.** He opens missions, routes work between specialists, follows reviews and publishes concise system, agent and Market Lab updates on X.
+
+Follow HELM: **[@Arch_Helm](https://x.com/Arch_Helm)**
+
 ## Project links
 
 - **[HOLDER HQ — THANK YOU FOR SUPPORTING ARCHITECTURE](https://www.architecture-holders.com/)**

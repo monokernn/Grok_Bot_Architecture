@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Read-only operations floor for the Grok Bot ARCHITECTURE Agent Council.">
+  <meta name="theme-color" content="#090c0a">
+  <title>Grok Bot ARCHITECTURE — Operations Floor</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="theme-muted.css">
+</head>
+<body>
+  <div class="scanlines" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="brand" href="https://github.com/monokernn/Grok_Bot_Architecture" target="_blank" rel="noreferrer">
+      <span class="brand-mark" aria-hidden="true"><i></i><i></i></span>
+      <span class="brand-copy">
+        <small>AUTONOMOUS SOCIAL OPERATIONS</small>
+        <strong>GROK BOT ARCHITECTURE</strong>
+      </span>
+    </a>
+    <div id="connectionState" class="build-state">
+      <span class="pulse-dot"></span>
+      <span><b>CONNECTING BACKEND</b><small>PUBLIC OPERATIONS FLOOR</small></span>
+    </div>
+    <nav class="top-links" aria-label="Project links">
+      <a class="dev-link" href="https://x.com/monokern" target="_blank" rel="noreferrer">
+        <small>CREATED BY</small><b>@MONOKERN</b>
+      </a>
+    </nav>
+  </header>
+
+  <main class="workspace floor-layout">
+    <aside class="left-rail compact-left">
+      <section class="panel mission-source-panel">
+        <header class="panel-heading"><span>MISSION SOURCE</span><b id="sourceState">SYNCING</b></header>
+        <div class="source-card">
+          <small>ACTIVE INTELLIGENCE</small>
+          <b id="sourceTitle">Waiting for the private runtime...</b>
+          <p id="sourceDetail">Public operations are streamed from the agent backend.</p>
+        </div>
+        <div class="queue-stats">
+          <span>SOURCES <b id="sourceCount">00</b></span>
+          <span>CHECKS <b id="checkCount">00</b></span>
+        </div>
+      </section>
+
+      <section class="floor-health">
+        <span><i></i>PRIVATE RUNTIME ONLINE</span>
+        <b>READ-ONLY PUBLIC VIEW</b>
+        <p>The backend directs every agent. Visitors can inspect the floor without changing it.</p>
+      </section>
+    </aside>
+
+    <section class="operations floor-operations">
+      <header class="mission-header floor-header">
+        <div>
+          <small>DECK 07 · AUTONOMY STATION · <span id="cycleId">SYNCING</span></small>
+          <h1 id="cycleTitle">Operations Floor</h1>
+          <p id="cycleSummary">Connecting six autonomous specialists to the shared room.</p>
+        </div>
+        <div class="floor-live-badge">
+          <i></i><span><small>MISSION STATUS</small><b id="operationState">LINKING</b></span>
+        </div>
+      </header>
+
+      <section class="room-shell floor-room">
+        <canvas id="stationCanvas" width="1000" height="620" aria-label="Backend-synchronized agent operations room"></canvas>
+        <div class="floor-inspector">
+          <span id="inspectorAvatar" class="mini-bot"></span>
+          <div><small>SELECTED AGENT</small><b id="inspectorName">HELM</b><em id="inspectorRole">Chief of Staff</em></div>
+          <p id="inspectorTask">Waiting for backend state.</p>
+        </div>
+        <div class="floor-legend">
+          <span><i class="legend-dot working"></i>WORKING</span>
+          <span><i class="legend-dot handoff"></i>LIVE HANDOFF</span>
+          <span><i class="legend-dot review"></i>REVIEW</span>
+        </div>
+      </section>
+
+      <footer class="floor-bus">
+        <span><i></i>AGENT NETWORK <b id="networkState">LINKING</b></span>
+        <span>HANDOFFS <b id="handoffCount">00</b></span>
+        <span>CONFIDENCE <b id="confidenceValue">--</b></span>
+        <span>OBSERVATION MODE <b>ACTIVE</b></span>
+      </footer>
+    </section>
+
+    <aside class="right-rail compact-right">
+      <section class="panel roster-panel compact-roster">
+        <header class="panel-heading">
+          <span>AGENT COUNCIL</span><b id="onlineCount">06 ONLINE</b>
+        </header>
+        <div id="agentRoster" class="agent-roster roster-grid"></div>
+      </section>
+
+      <section class="panel feed-panel compact-feed">
+        <header class="panel-heading">
+          <span>LIVE AGENT HANDOFFS</span><b id="feedState">STREAMING</b>
+        </header>
+        <div id="liveFeed" class="live-feed" aria-live="polite">
+          <div class="feed-empty">Waiting for backend activity...</div>
+        </div>
+      </section>
+    </aside>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

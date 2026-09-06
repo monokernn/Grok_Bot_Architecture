@@ -1,0 +1,28 @@
+# Environment and local secrets
+.env
+.env.*
+!.env.example
+
+# Hosting and local tooling
+.vercel/
+node_modules/
+dist/
+coverage/
+
+# Temporary browser profiles and test artifacts
+.chrome-*/
+.edge-*/
+*-test.png
+*-test.jpg
+*-test.jpeg
+
+# Logs and caches
+*.log
+*.tmp
+*.cache
+__pycache__/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini
